@@ -739,6 +739,8 @@
 		C98A013C2790AED800E29A97 /* ViewDatabasePerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98A013B2790AED800E29A97 /* ViewDatabasePerformanceTests.swift */; };
 		C98A013E2790AF4400E29A97 /* DatabaseFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98A013D2790AF4400E29A97 /* DatabaseFixtures.swift */; };
 		C98A014B2790C5A900E29A97 /* Feed_big.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = C98A014A2790C5A800E29A97 /* Feed_big.sqlite */; };
+		C991509027A9ECB400E81D26 /* NSAttributedString+TruncationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C991508F27A9ECB400E81D26 /* NSAttributedString+TruncationTests.swift */; };
+		C991509127A9EE0300E81D26 /* NSAttributedString+Truncation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D4EC14A23394ABE00D46403 /* NSAttributedString+Truncation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1298,6 +1300,7 @@
 		C98A01482790B9F300E29A97 /* UnitTests.debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = UnitTests.debug.xcconfig; sourceTree = "<group>"; };
 		C98A01492790B9F400E29A97 /* Shared.debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Shared.debug.xcconfig; sourceTree = "<group>"; };
 		C98A014A2790C5A800E29A97 /* Feed_big.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = Feed_big.sqlite; sourceTree = "<group>"; };
+		C991508F27A9ECB400E81D26 /* NSAttributedString+TruncationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+TruncationTests.swift"; sourceTree = "<group>"; };
 		CF9B62C70608D7BF6B9E6C75 /* Pods-UnitTests.test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UnitTests.test.xcconfig"; path = "Pods/Target Support Files/Pods-UnitTests/Pods-UnitTests.test.xcconfig"; sourceTree = "<group>"; };
 		DA47D5E4C3A8F4D56C502C60 /* Pods_Planetary.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Planetary.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E0C3E36DB95E1F07BAA33927 /* Pods_FBTT.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FBTT.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2272,6 +2275,7 @@
 			isa = PBXGroup;
 			children = (
 				C98A013B2790AED800E29A97 /* ViewDatabasePerformanceTests.swift */,
+				C991508F27A9ECB400E81D26 /* NSAttributedString+TruncationTests.swift */,
 			);
 			path = Performance;
 			sourceTree = "<group>";
@@ -2867,6 +2871,7 @@
 				23C744552200B12200FB554A /* Profile.swift in Sources */,
 				237D057C2335149100973D63 /* Blob+UIImage.swift in Sources */,
 				2358695B24A0FB1100F4FC1D /* URLResponse+APIError.swift in Sources */,
+				C991509027A9ECB400E81D26 /* NSAttributedString+TruncationTests.swift in Sources */,
 				C98A013E2790AF4400E29A97 /* DatabaseFixtures.swift in Sources */,
 				53CF2A4D22026B1700F0A2CC /* Image.swift in Sources */,
 				0A38800F2475ACF000777843 /* PubAPI.swift in Sources */,
@@ -2880,6 +2885,7 @@
 				2358695724A0FAA200F4FC1D /* API.swift in Sources */,
 				53362F6E2209F754007264CB /* NetworkKeyTests.swift in Sources */,
 				0A3880262475BD3D00777843 /* Analytics.swift in Sources */,
+				C991509127A9EE0300E81D26 /* NSAttributedString+Truncation.swift in Sources */,
 				2356500D2369C6CB00C3DBC0 /* DropContentRequest.swift in Sources */,
 				236BCB7222689406006DF05B /* Address.swift in Sources */,
 				53C2B13D2295BCC10018D0A8 /* Bundle+Version.swift in Sources */,

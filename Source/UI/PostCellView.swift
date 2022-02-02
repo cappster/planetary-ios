@@ -63,14 +63,7 @@ class PostCellView: KeyValueView {
         }
     }
 
-    var fullPostText = NSAttributedString() {
-        didSet {
-            // reset cached text, but don't recalculate yet so we don't do unnecessary work.
-            self.truncationData = nil
-        }
-    }
-
-    var truncationData: (text: NSAttributedString, width: CGFloat)?
+    private var truncationData: (text: NSAttributedString, width: CGFloat)?
     private let emptyTruncationData = (text: NSAttributedString.empty, width: CGFloat(0))
 
     var truncationLimit: TruncationSettings? {
@@ -85,7 +78,7 @@ class PostCellView: KeyValueView {
         }
     }
 
-    var shouldTruncate: Bool {
+    var truncationEnabled: Bool {
         return self.truncationLimit != nil
     }
 
@@ -95,9 +88,25 @@ class PostCellView: KeyValueView {
         }
     }
 
-    func configureTextView() {
-        calculateTruncationDataIfNecessary()
-        textView.attributedText = textIsExpanded ? fullPostText : truncationData?.text
+    private func configureTextView() {
+        guard let keyValue = keyValue else {
+            return
+        }
+        
+        if let vote = keyValue.value.content.vote {
+            let expression: String
+            if vote.vote.value > 0 {
+                expression = "💜"
+            } else {
+                expression = "💔"
+            }
+            
+            self.textView.text = expression
+        } else {
+            calculateTruncationDataIfNecessary()
+            textView.attributedText = textIsExpanded ? Caches.text.from(keyValue) : truncationData?.text ?? Caches.text.from(keyValue)
+        }
+        
         
         //not so clean but it gest likes displaying.
         if self.textView.attributedText.string.isSingleEmoji && self.keyValue?.value.content.type == Planetary.ContentType.vote {
@@ -118,12 +127,15 @@ class PostCellView: KeyValueView {
     /// Calculates the truncation data, but only when necessary.  In some cases, an optimized
     /// answer can be used because `NSAttributedString.truncating()` is very
     /// expensive, especially during scrolling.
-    func calculateTruncationDataIfNecessary() {
+    private func calculateTruncationDataIfNecessary() {
 
         // skip calculation if not necessary
-        guard let limit = self.truncationLimit else { return }
-        guard self.truncationData == nil else { return }
-        guard !self.textIsExpanded else { return }
+        guard let keyValue = keyValue,
+              let limit = truncationLimit,
+              truncationData == nil,
+              !self.textIsExpanded else {
+                  return
+              }
 
         // truncation cannot be calculated without a height
         // so return an optimized answer to allow text layout
@@ -134,7 +146,7 @@ class PostCellView: KeyValueView {
 
         // calculate with a valid width
         let width = self.textView.frame.width
-        let text = fullPostText.truncating(with: self.seeMoreString, settings: limit, width: width)
+        let text = Caches.text.from(keyValue).truncating(with: seeMoreString, settings: limit, width: width)
         self.truncationData = (text: text, width: width)
     }
 
@@ -208,38 +220,28 @@ class PostCellView: KeyValueView {
     // MARK: KeyValueUpdateable
 
     override func update(with keyValue: KeyValue) {
+        guard self.keyValue != keyValue else {
+            return
+        }
+        
+        self.truncationData = nil
         self.keyValue = keyValue
         self.headerView.update(with: keyValue)
 
-        if let vote = keyValue.value.content.vote {
-            let expression: String
-            if vote.vote.value > 0 {
-                expression = "💜"
-            } else {
-                expression = "💔"
-            }
-            
-            self.fullPostText = NSAttributedString(string: expression)
-            self.textView.text = expression
-            configureTextView()
-            
+        if keyValue.value.content.vote != nil {
             self.galleryViewFullHeightConstraint.isActive = false
             self.galleryViewZeroHeightConstraint.isActive = true
             self.galleryViewBottomConstraint?.constant = 0
-        } else if let post = keyValue.value.content.post {
-            self.fullPostText = Caches.text.from(keyValue)
             configureTextView()
-
+        } else if let post = keyValue.value.content.post {
             self.galleryViewFullHeightConstraint.isActive = post.hasBlobs
             self.galleryViewZeroHeightConstraint.isActive = !post.hasBlobs
             self.galleryViewBottomConstraint?.constant = (post.hasBlobs && self.allowSpaceUnderGallery) ? -Layout.verticalSpacing : 0
             self.galleryView.update(with: post)
+            configureTextView()
         } else {
             return
         }
-        
-
-        
 
         // always do this in case of constraint changes
         self.setNeedsLayout()
