@@ -9,12 +9,11 @@
 import Foundation
 
 class NullPushAPI: PushAPIService {
-    
+
     var token: Data?
-    
+
     func update(_ token: Data?, for identity: Identity, completion: @escaping ((Bool, APIError?) -> Void)) {
         self.token = token
         completion(true, nil)
     }
-    
 }

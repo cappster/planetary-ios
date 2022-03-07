@@ -26,13 +26,12 @@ class PeersView: UIView {
         let label = UILabel.forAutoLayout()
         return label
     }()
-    
+
     let syncedLabel: UILabel = {
         let label = UILabel.forAutoLayout()
         return label
     }()
 
-    
     let connectionAnimation = PeerConnectionAnimation(color: .networkAnimation)
 
     convenience init() {
@@ -41,32 +40,27 @@ class PeersView: UIView {
         self.connectionAnimation.useAutoLayout()
         Layout.fillLeft(of: self, with: self.connectionAnimation)
         self.connectionAnimation.constrainSize(to: self.connectionAnimation.totalDiameter)
-        
-        
-        
+
         self.addSubview(self.onlineLabel)
         self.onlineLabel.constrainLeading(toTrailingOf: self.connectionAnimation, constant: Layout.horizontalSpacing)
         self.onlineLabel.bottomAnchor.constraint(equalTo: self.connectionAnimation.centerYAnchor, constant: -1).isActive = true
 
-        //self.addSubview(self.localLabel)
-        //self.localLabel.constrainLeading(toTrailingOf: self.connectionAnimation, constant: Layout.horizontalSpacing)
-        //self.localLabel.topAnchor.constraint(equalTo: self.connectionAnimation.centerYAnchor, constant: -5).isActive = true
-        
+        // self.addSubview(self.localLabel)
+        // self.localLabel.constrainLeading(toTrailingOf: self.connectionAnimation, constant: Layout.horizontalSpacing)
+        // self.localLabel.topAnchor.constraint(equalTo: self.connectionAnimation.centerYAnchor, constant: -5).isActive = true
+
         self.addSubview(self.syncedLabel)
         self.syncedLabel.constrainLeading(toTrailingOf: self.connectionAnimation, constant: Layout.horizontalSpacing)
         self.syncedLabel.topAnchor.constraint(equalTo: self.connectionAnimation.centerYAnchor, constant: 1).isActive = true
-        
-        
+
         self.update(local: 0, online: 0, animated: false)
         self.setSync(lastSyncDate: nil)
-        
-        let gesture = UITapGestureRecognizer(target: self, action:  #selector(self.triggerSync))
-        self.addGestureRecognizer(gesture)
 
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(self.triggerSync))
+        self.addGestureRecognizer(gesture)
 
 //        self.runSimulation()
     }
-
 
     // Ensure the timer is stopped to allow this to be released correctly.
     // If this is not called, then the running timer will cause a retain
@@ -146,8 +140,8 @@ class PeersView: UIView {
     }
 
     private func update(local: Int, online: Int, animated: Bool = true) {
- 
-        //self.setStatus(text: .countLocalPeers, label: self.localLabel, count: local)
+
+        // self.setStatus(text: .countLocalPeers, label: self.localLabel, count: local)
         self.connectionAnimation.setDotCount(inside: true, count: local, animated: animated) {
             let delay = animated ? 1.2 : 0
             DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
@@ -156,7 +150,6 @@ class PeersView: UIView {
             }
         }
     }
-    
 
     private func setStatus(text: Text, label: UILabel, count: Int) {
         let count = String(count)
@@ -168,39 +161,38 @@ class PeersView: UIView {
         attributed.addColorAttribute(UIColor.text.detail)
         label.attributedText = attributed
     }
-    
-    
-    @objc func triggerSync(sender : UITapGestureRecognizer) {
+
+    @objc func triggerSync(sender: UITapGestureRecognizer) {
         self.connectionAnimation.searchAnimation()
         AppController.shared.missionControlCenter.sendMission()
     }
-    
+
     private func setSync(lastSyncDate: Date?) {
         let text = Text.lastSynced
         let label = self.syncedLabel
         let string = text.text(["when": lastSyncText(from: lastSyncDate)])
         let attributed = NSMutableAttributedString(string: string)
         attributed.addFontAttribute(UIFont.verse.peerCount)
-        //let range = (string as NSString).range(of: count)
-        //attributed.addAttribute(.font, value: UIFont.verse.peerCountBold, range: range)
+        // let range = (string as NSString).range(of: count)
+        // attributed.addAttribute(.font, value: UIFont.verse.peerCountBold, range: range)
         attributed.addColorAttribute(UIColor.text.detail)
         label.attributedText = attributed
     }
-    
+
     private func lastSyncText(from date: Date?) -> String {
         if let lastSyncDate = date {
             return self.format(date: lastSyncDate)
         } else {
             do {
                 let timestamp = try Bots.current.lastReceivedTimestam()
-                let miliseconds = timestamp/1000
+                let miliseconds = timestamp / 1_000
                 return self.format(date: Date(timeIntervalSince1970: miliseconds))
             } catch {
                 return ""
             }
         }
     }
-    
+
     private func format(date: Date?) -> String {
         guard let date = date else { return "" }
         let dateString = DateFormatter.localizedString(from: date, dateStyle: .short, timeStyle: .none)
@@ -213,7 +205,7 @@ class PeersView: UIView {
 extension PeerStatistics {
 
     var onlineCount: Int {
-        return self.currentOpen.count
+        self.currentOpen.count
     }
 
     // TODO to calculate local we need our IP address
@@ -225,8 +217,6 @@ extension PeerStatistics {
         return online.count
     }
 }
-
-
 
 /*
 

@@ -13,16 +13,15 @@ class LoadBundleOperation: AsynchronousOperation {
 
     var bundle: Bundle
     private(set) var error: Error?
-    
+
     init(bundle: Bundle) {
         self.bundle = bundle
         super.init()
     }
-    
 
     override func main() {
         Log.info("LoadBundleOperation started.")
-        
+
         let configuredIdentity = AppConfiguration.current?.identity
         let loggedInIdentity = Bots.current.identity
         guard loggedInIdentity != nil, loggedInIdentity == configuredIdentity else {
@@ -31,9 +30,9 @@ class LoadBundleOperation: AsynchronousOperation {
             self.finish()
             return
         }
-        
+
         let group = DispatchGroup()
-        
+
         let feedPaths = bundle.paths(forResourcesOfType: "json", inDirectory: "Feeds")
         feedPaths.forEach { path in
             group.enter()
@@ -48,15 +47,15 @@ class LoadBundleOperation: AsynchronousOperation {
                 group.leave()
             }
         }
-        
+
         let blobIdentifiersPath = bundle.path(forResource: "BlobIdentifiers", ofType: "plist")!
         let xml = FileManager.default.contents(atPath: blobIdentifiersPath)!
         var format = PropertyListSerialization.PropertyListFormat.xml
         let blobIdentifiers = try! PropertyListSerialization.propertyList(from: xml,
                                                                           options: .mutableContainersAndLeaves,
                                                                           format: &format) as! [String: String]
-        
-        let blobPaths  = bundle.paths(forResourcesOfType: nil, inDirectory: "Blobs")
+
+        let blobPaths = bundle.paths(forResourcesOfType: nil, inDirectory: "Blobs")
         blobPaths.forEach { path in
             group.enter()
             let url = URL(fileURLWithPath: path)
@@ -71,10 +70,9 @@ class LoadBundleOperation: AsynchronousOperation {
                 group.leave()
             }
         }
-        
+
         group.wait()
-        
+
         self.finish()
     }
-    
 }

@@ -6,13 +6,13 @@
 //  Copyright © 2019 Verse Communications Inc. All rights reserved.
 //
 
-import Foundation
-import UIKit
-import Logger
 import Analytics
+import Foundation
+import Logger
+import UIKit
 
 class ChannelsViewController: ContentViewController {
-    
+
     private static var refreshBackgroundTaskIdentifier: UIBackgroundTaskIdentifier = .invalid
 
     private let dataSource = HashtagTableViewDataSource()
@@ -52,7 +52,7 @@ class ChannelsViewController: ContentViewController {
         self.addLoadingAnimation()
         self.load()
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         CrashReporting.shared.record("Did Show Channels")
@@ -68,13 +68,13 @@ class ChannelsViewController: ContentViewController {
     // MARK: Load and refresh
 
     private func load(animated: Bool = false) {
-        Bots.current.hashtags() {
+        Bots.current.hashtags {
             [weak self] hashtags, error in
             CrashReporting.shared.reportIfNeeded(error: error)
             Log.optional(error)
             self?.removeLoadingAnimation()
             self?.refreshControl.endRefreshing()
-            
+
             if let error = error {
                 self?.alert(error: error)
             } else {
@@ -87,10 +87,10 @@ class ChannelsViewController: ContentViewController {
         if ChannelsViewController.refreshBackgroundTaskIdentifier != .invalid {
             UIApplication.shared.endBackgroundTask(ChannelsViewController.refreshBackgroundTaskIdentifier)
         }
-        
+
         Log.info("Pull down to refresh triggering a short refresh")
         let refreshOperation = RefreshOperation(refreshLoad: .short)
-        
+
         let taskName = "ChannelsPullDownToRefresh"
         let taskIdentifier = UIApplication.shared.beginBackgroundTask(withName: taskName) {
             // Expiry handler, iOS will call this shortly before ending the task
@@ -99,16 +99,16 @@ class ChannelsViewController: ContentViewController {
             ChannelsViewController.refreshBackgroundTaskIdentifier = .invalid
         }
         ChannelsViewController.refreshBackgroundTaskIdentifier = taskIdentifier
-        
+
         refreshOperation.completionBlock = { [weak self] in
             Log.optional(refreshOperation.error)
             CrashReporting.shared.reportIfNeeded(error: refreshOperation.error)
-            
+
             if taskIdentifier != UIBackgroundTaskIdentifier.invalid {
                 UIApplication.shared.endBackgroundTask(taskIdentifier)
                 ChannelsViewController.refreshBackgroundTaskIdentifier = .invalid
             }
-            
+
             DispatchQueue.main.async { [weak self] in
                 self?.load(animated: animated)
             }
@@ -127,7 +127,7 @@ class ChannelsViewController: ContentViewController {
         control.beginRefreshing()
         self.refreshAndLoad()
     }
-    
+
     // MARK: Notifications
 
     override func registerNotifications() {
@@ -162,12 +162,12 @@ extension ChannelsViewController: TopScrollable {
     }
 }
 
-fileprivate class HashtagTableViewDataSource: NSObject, UITableViewDataSource {
+private class HashtagTableViewDataSource: NSObject, UITableViewDataSource {
 
     var hashtags: [Hashtag] = []
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.hashtags.count
+        self.hashtags.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -178,17 +178,17 @@ fileprivate class HashtagTableViewDataSource: NSObject, UITableViewDataSource {
         cell.textLabel?.text = hashtag.string
         cell.selectionStyle = .none
         cell.backgroundColor = .cardBackground
-        
+
         let post_text = (hashtag.count == 1) ? Text.Post.one.text : Text.Post.many.text
         let ago = hashtag.timeAgo()
-        
+
         cell.detailTextLabel?.text = "\(hashtag.count) \(post_text) \(Text.Channel.lastUpdated.text) \(ago)"
-        
+
         return cell
     }
 }
 
-//"\(f[0]!)"
+// "\(f[0]!)"
 
 extension ChannelsViewController: UITableViewDelegate {
 

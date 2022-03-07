@@ -14,12 +14,12 @@ class ViewDatabasePerformanceTests: XCTestCase {
     var dbURL: URL!
     var vdb = ViewDatabase()
     let testFeed = DatabaseFixture.bigFeed
-    
+
     override func setUpWithError() throws {
         vdb.close()
         vdb = ViewDatabase()
         let dbDir = NSURL.fileURL(withPathComponents: [NSTemporaryDirectory(), "ViewDatabaseBenchmarkTests"])!
-        dbURL = NSURL.fileURL(withPathComponents:[
+        dbURL = NSURL.fileURL(withPathComponents: [
             NSTemporaryDirectory(),
             "ViewDatabaseBenchmarkTests",
             "schema-built\(ViewDatabase.schemaVersion).sqlite"
@@ -28,18 +28,18 @@ class ViewDatabasePerformanceTests: XCTestCase {
         try FileManager.default.createDirectory(at: dbDir, withIntermediateDirectories: true)
         let sqliteURL = Bundle(for: type(of: self)).url(forResource: "Feed_big", withExtension: "sqlite")!
         try FileManager.default.copyItem(at: sqliteURL, to: dbURL)
-        
+
         // open DB
         let dbDirPath = dbDir.absoluteString.replacingOccurrences(of: "file://", with: "")
-        let maxAge: Double = -60*60*24*30*48  // 48 month (so roughtly until 2023)
+        let maxAge: Double = -60 * 60 * 24 * 30 * 48  // 48 month (so roughtly until 2023)
         try vdb.open(path: dbDirPath, user: testFeed.owner, maxAge: maxAge)
     }
-    
+
     override func tearDownWithError() throws {
         vdb.close()
         try FileManager.default.removeItem(at: self.dbURL)
     }
-    
+
     func resetDB() throws {
         try tearDownWithError()
         try setUpWithError()
@@ -54,31 +54,31 @@ class ViewDatabasePerformanceTests: XCTestCase {
         // get test messages from JSON
         let msgs = try JSONDecoder().decode([KeyValue].self, from: data)
         XCTAssertNotNil(msgs)
-        XCTAssertEqual(msgs.count, 2500)
-        
+        XCTAssertEqual(msgs.count, 2_500)
+
         self.measure {
             let vdb = ViewDatabase()
             let tmpURL = NSURL.fileURL(withPathComponents: [NSTemporaryDirectory(), NSUUID().uuidString])!
             try! FileManager.default.createDirectory(at: tmpURL, withIntermediateDirectories: true)
-            
+
             vdb.close() // close init()ed version...
-            
+
             urls += [tmpURL] // don't litter
-            
+
             let  damnPath = tmpURL.absoluteString.replacingOccurrences(of: "file://", with: "")
             try! vdb.open(path: damnPath, user: testFeed.secret.identity)
-            
+
             try! vdb.fillMessages(msgs: msgs)
-            
+
             vdb.close()
         }
-        
+
         print("dropping \(urls.count) runs") // clean up
         for u in urls {
             try FileManager.default.removeItem(at: u)
         }
     }
-    
+
     func testGetFollows() {
         measureMetrics([XCTPerformanceMetric.wallClockTime], automaticallyStartMeasuring: false) {
             startMeasuring()
@@ -91,8 +91,7 @@ class ViewDatabasePerformanceTests: XCTestCase {
             try! resetDB()
         }
     }
-    
-    
+
     func testFeedForIdentity() {
         measureMetrics([XCTPerformanceMetric.wallClockTime], automaticallyStartMeasuring: false) {
             startMeasuring()
@@ -108,46 +107,46 @@ class ViewDatabasePerformanceTests: XCTestCase {
     func testSimultanousReadsAndWrites() throws {
         let data = self.data(for: DatabaseFixture.bigFeed.fileName)
         let msgs = try JSONDecoder().decode([KeyValue].self, from: data)
-        
+
         measure {
             var writerIsFinished = false
             let writesFinished = self.expectation(description: "Writes finished")
             let writer = {
                 try! self.vdb.fillMessages(msgs: msgs)
-                
+
                 // Synchronize the writerIsFinished property because readers may be using it from other threads.
                 objc_sync_enter(self)
                 writerIsFinished = true
                 objc_sync_exit(self)
                 writesFinished.fulfill()
             }
-            
+
             var readers = [() -> Void]()
             for i in 0..<100 {
                 let readFinished = self.expectation(description: "Read \(i) finished")
                 let reader = { [self] in
                     _ = try! self.vdb.feed(for: self.testFeed.identities[0])
-                    
+
                     // Verify that we weren't blocked by the writer.
                     objc_sync_enter(self)
                     XCTAssertEqual(writerIsFinished, false)
                     objc_sync_exit(self)
                     readFinished.fulfill()
                 }
-                
+
                 readers.append(reader)
             }
-            
+
             DispatchQueue(label: "write").async {
                 writer()
             }
-            
+
             for (i, reader) in readers.enumerated() {
                 DispatchQueue(label: "readQueue \(i)").async {
                     reader()
                 }
             }
-            
+
             waitForExpectations(timeout: 10)
         }
     }

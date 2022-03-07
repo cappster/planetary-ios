@@ -5,8 +5,8 @@
 //  Created by Martin Dutra on 30/11/21.
 //
 
-import XCTest
 @testable import Analytics
+import XCTest
 
 final class AnalyticsTests: XCTestCase {
 
@@ -270,5 +270,4 @@ final class AnalyticsTests: XCTestCase {
         analytics.trackStatistics(statistics)
         XCTAssertTrue(service.tracked)
     }
-
 }

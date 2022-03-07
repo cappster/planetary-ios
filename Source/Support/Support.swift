@@ -9,7 +9,7 @@
 import Foundation
 
 struct Support {
-    
+
     static var shared: SupportService = {
         #if DEBUG
         return NullSupport()
@@ -21,5 +21,4 @@ struct Support {
         }
         #endif
     }()
-    
 }

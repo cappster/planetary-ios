@@ -7,9 +7,9 @@
 //
 
 import Foundation
+import Logger
 import Photos
 import UIKit
-import Logger
 
 class PhotoConfirmOnboardingStep: OnboardingStep {
 
@@ -37,7 +37,7 @@ class PhotoConfirmOnboardingStep: OnboardingStep {
     override func customizeView() {
         Layout.center(self.circleView, in: self.view, size: CGSize(square: Layout.profileImageOutside))
         Layout.center(self.imageView, in: self.circleView, size: CGSize(square: Layout.profileImageInside))
-        
+
         self.circleView.roundedCorners(radius: Layout.profileImageOutside / 2)
         self.imageView.roundedCorners(radius: Layout.profileImageInside / 2)
 
@@ -79,11 +79,11 @@ class PhotoConfirmOnboardingStep: OnboardingStep {
         self.view.lookBusy(disable: self.view.primaryButton)
 
         // TODO could be a composite func that does all of this
-        context.bot.addBlob(jpegOf: image, largestDimension: 1000) {
+        context.bot.addBlob(jpegOf: image, largestDimension: 1_000) {
             [weak self] image, error in
 
             CrashReporting.shared.reportIfNeeded(error: error)
-            
+
             if Log.optional(error) {
                 self?.view.lookReady()
                 return

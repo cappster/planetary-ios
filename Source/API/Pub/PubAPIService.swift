@@ -9,9 +9,8 @@
 import Foundation
 
 protocol PubAPIService {
-    
+
     func pubsAreOnline(completion: @escaping ((Bool, APIError?) -> Void))
-    
+
     func invitePubsToFollow(_ identity: Identity, completion: @escaping ((Bool, APIError?) -> Void))
-    
 }

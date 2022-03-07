@@ -12,16 +12,15 @@ import Foundation
 /// all layers of an application.
 
 protocol CrashReportingService {
-    
+
     func identify(about: About?, network: NetworkKey)
     func forget()
-    
+
     func crash()
-    
+
     func record(_ message: String)
-    
+
     func reportIfNeeded(error: Error?)
 
     func reportIfNeeded(error: Error?, metadata: [AnyHashable: Any])
-    
 }

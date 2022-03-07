@@ -9,7 +9,7 @@
 import Foundation
 
 extension ViewDatabaseError: LocalizedError {
-    
+
     var errorDescription: String? {
         switch self {
         case .notOpen:
@@ -32,5 +32,4 @@ extension ViewDatabaseError: LocalizedError {
             return "Message constraint violation: \(identity)"
         }
     }
-    
 }

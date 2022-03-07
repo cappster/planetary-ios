@@ -6,13 +6,12 @@
 //  Copyright © 2019 Verse Communications Inc. All rights reserved.
 //
 
-import UIKit
 import Analytics
+import UIKit
 
 protocol ThreadInteractionViewDelegate: class {
-    
+
     func threadInteractionView(_ view: ThreadInteractionView, didLike post: KeyValue)
-    
 }
 
 class ThreadInteractionView: UIView {
@@ -28,13 +27,13 @@ class ThreadInteractionView: UIView {
             }
         }
     }
-    
+
     weak var delegate: ThreadInteractionViewDelegate?
-    
-    var post: KeyValue? = nil
+
+    var post: KeyValue?
     var replies: StaticDataProxy?
-    var userLikes: Bool = false
-    
+    var userLikes = false
+
     private lazy var stack: UIStackView = {
         let view = UIStackView.forAutoLayout()
         view.axis = .horizontal
@@ -69,7 +68,7 @@ class ThreadInteractionView: UIView {
     init() {
         super.init(frame: .zero)
         self.useAutoLayout()
-        
+
         Layout.addSeparator(toTopOf: self)
         Layout.addSeparator(toBottomOf: self)
 
@@ -83,19 +82,19 @@ class ThreadInteractionView: UIView {
             button.constrainSize(to: 25)
             self.stack.addArrangedSubview(button)
         }
-        
+
         // Lets hide the like button and wait until update() finishes to show it
         self.likeButton.isHidden = true
-        
+
         self.shareButton.isHidden = false
     }
-    
+
     func update() {
-        //check to see if we're currently linking this post
+        // check to see if we're currently linking this post
         let me = Bots.current.identity
-        if self.replies!.count-1 >= 0 {
-            for index in 0...self.replies!.count-1 {
-                if self.replies!.keyValueBy(index: index)?.value.content.type ==  Planetary.ContentType.vote {
+        if self.replies!.count - 1 >= 0 {
+            for index in 0...self.replies!.count - 1 {
+                if self.replies!.keyValueBy(index: index)?.value.content.type == Planetary.ContentType.vote {
                     let likeIdentity = self.replies!.keyValueBy(index: index)?.metadata.author.about?.about
                     if me == likeIdentity {
                         self.userLikes = true
@@ -103,7 +102,7 @@ class ThreadInteractionView: UIView {
                 }
             }
         }
-            
+
         if self.userLikes {
             self.likeButton.setImage(UIImage.verse.liked, for: .normal)
         } else {
@@ -111,7 +110,6 @@ class ThreadInteractionView: UIView {
         }
         self.likeButton.isHidden = false
     }
-    
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -123,7 +121,7 @@ class ThreadInteractionView: UIView {
         }
 
         Analytics.shared.trackDidTapButton(buttonName: "share")
-        
+
         var actions = [UIAlertAction]()
 
         let copyMessageIdentifier = UIAlertAction(title: Text.copyMessageIdentifier.text, style: .default) { _ in
@@ -132,12 +130,12 @@ class ThreadInteractionView: UIView {
             AppController.shared.showToast(Text.identifierCopied.text)
         }
         actions.append(copyMessageIdentifier)
-        
+
         let copyMesssageLink = UIAlertAction(title: Text.shareThisMessage.text, style: .default) { _ in
             guard let publicLink = post.key.publicLink else {
                 return
             }
-            
+
             let who = post.metadata.author.about?.nameOrIdentity ?? post.value.author
             let link = publicLink.absoluteString
             let postWithoutGallery = post.value.content.post?.text.withoutGallery() ?? ""
@@ -159,7 +157,6 @@ class ThreadInteractionView: UIView {
         actions.append(cancel)
 
         AppController.shared.choose(from: actions, sourceView: sender)
-        
 
         print(#function)
     }
@@ -168,15 +165,15 @@ class ThreadInteractionView: UIView {
 
         print(#function)
     }
-    
+
     @objc func didPressLike(sender: UIButton) {
         guard let post = self.post, !self.userLikes else {
             return
         }
-        
+
         Analytics.shared.trackDidTapButton(buttonName: "like")
         sender.setImage(UIImage.verse.liked, for: .normal)
-        
+
         sender.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
         UIView.animate(withDuration: 2.0,
                        delay: 0,
@@ -185,7 +182,7 @@ class ThreadInteractionView: UIView {
                        options: .allowUserInteraction,
                        animations: { sender.transform = .identity },
                        completion: nil)
-        
+
         self.delegate?.threadInteractionView(self, didLike: post)
     }
 }

@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import UIKit
 import Logger
+import UIKit
 
 class BlockedUsersViewController: ContentViewController, AboutTableViewDelegate {
 
@@ -69,7 +69,7 @@ class BlockedUsersViewController: ContentViewController, AboutTableViewDelegate 
     }
 }
 
-fileprivate class BlockedUsersTableViewDataSource: AboutTableViewDataSource {
+private class BlockedUsersTableViewDataSource: AboutTableViewDataSource {
 
     // TODO this is hack to ensure that the cells only show the
     // block button and not the follow button, the other option

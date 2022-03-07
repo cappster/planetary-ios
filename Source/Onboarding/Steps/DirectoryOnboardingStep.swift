@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import UIKit
 import Logger
+import UIKit
 
 class DirectoryOnboardingStep: OnboardingStep, UITableViewDataSource, UITableViewDelegate {
 
@@ -48,8 +48,6 @@ class DirectoryOnboardingStep: OnboardingStep, UITableViewDataSource, UITableVie
         controller.navigationItem.hidesBackButton = true
     }
 
-
-
     @objc func didPressNext(sender button: UIButton) {
         self.performPrimaryAction(sender: button)
     }
@@ -69,7 +67,7 @@ class DirectoryOnboardingStep: OnboardingStep, UITableViewDataSource, UITableVie
         }
 
         self.view.lookBusy(disable: self.view.primaryButton)
-        
+
         /*
         // follow identities
         // TODO: make sure this uses the identities from the integration test network https://app.asana.com/0/0/1134329918920786/f
@@ -96,7 +94,7 @@ class DirectoryOnboardingStep: OnboardingStep, UITableViewDataSource, UITableVie
     // MARK: table stuff
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.people.count
+        self.people.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

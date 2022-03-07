@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import UIKit
 import Logger
+import UIKit
 
 class ResumeOnboardingStep: OnboardingStep {
 
@@ -30,7 +30,7 @@ class ResumeOnboardingStep: OnboardingStep {
             return
         }
 
-        Onboarding.resume() {
+        Onboarding.resume {
             [weak self] context, error in
             CrashReporting.shared.reportIfNeeded(error: error)
             if Log.optional(error) { self?.alert(); return }
@@ -42,7 +42,7 @@ class ResumeOnboardingStep: OnboardingStep {
     private func scheduledNext() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             self.view.lookReady()
-            self.next();
+            self.next()
         }
     }
 
@@ -51,12 +51,11 @@ class ResumeOnboardingStep: OnboardingStep {
         // this will try Onboarding.start() again, creating a new
         // configuration and such
         let tryAgain = UIAlertAction(title: Text.tryAgain.text,
-                                     style: .default)
-        {
-            [weak self] action in
+                                     style: .default) {
+            [weak self] _ in
             self?.didStart()
         }
-        
+
         let reset = UIAlertAction(title: Text.Onboarding.startOver.text,
                                   style: .destructive) { _ in
                                     let configuration = AppConfiguration.current

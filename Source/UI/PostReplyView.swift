@@ -31,7 +31,7 @@ class PostReplyView: KeyValueView {
         view.backgroundColor = .cardBackground
         return view
     }()
-    
+
     let degrade: UIView = {
         let backgroundView = UIView.forAutoLayout()
         backgroundView.constrainHeight(to: 0)
@@ -49,10 +49,10 @@ class PostReplyView: KeyValueView {
 
         let topBorder = Layout.separatorView()
         let bottomBorder = Layout.separatorView()
-        
+
         topBorder.backgroundColor = .cardBorder
         bottomBorder.backgroundColor = .cardBorder
-        
+
         let bottomSeparator = Layout.separatorView(height: 10,
                                                    color: .appBackground)
 
@@ -61,12 +61,12 @@ class PostReplyView: KeyValueView {
         Layout.fillSouth(of: self.postView, with: self.repliesView)
         Layout.fillSouth(of: self.repliesView, with: self.replyTextView)
         Layout.fillSouth(of: self.replyTextView, with: bottomBorder)
-        
+
         Layout.fillSouth(of: bottomBorder, with: self.degrade)
-        
+
         Layout.fillSouth(of: degrade, with: bottomSeparator)
         bottomSeparator.pinBottomToSuperviewBottom()
-        
+
         self.isSkeletonable = true
     }
 
@@ -94,8 +94,7 @@ extension PostReplyView {
     /// for the various subviews, but this needs to be a very fast call so no complicated calculations
     /// should be done.  Instead, some magic numbers are used based on the various constraints.
     static func estimatedHeight(with keyValue: KeyValue,
-                                in superview: UIView) -> CGFloat
-    {
+                                in superview: UIView) -> CGFloat {
         // starting height based for all non-zero height subviews
         // header + text + reply box
         var height = CGFloat(300)
@@ -116,13 +115,12 @@ extension PostReplyView {
 
 class RepliesView: KeyValueView {
 
-
     private let textFont = UIFont.systemFont(ofSize: 14, weight: .regular)
 
     let avatarImageView = AvatarStackView()
 
     var expandedHeight: CGFloat {
-        return self.avatarImageView.height + Layout.verticalSpacing
+        self.avatarImageView.height + Layout.verticalSpacing
     }
 
     let label = UILabel.forAutoLayout()

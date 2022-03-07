@@ -5,10 +5,10 @@
 //  Created by Martin Dutra on 11/12/21.
 //
 
-import XCTest
 @testable import Analytics
 import PostHog
 import Secrets
+import XCTest
 
 final class PosthogServiceTests: XCTestCase {
 
@@ -72,5 +72,4 @@ final class PosthogServiceTests: XCTestCase {
         service.optIn()
         XCTAssertTrue(posthog.enabled)
     }
-
 }

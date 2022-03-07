@@ -6,8 +6,8 @@
 //  Copyright © 2019 Verse Communications Inc. All rights reserved.
 //
 
-import XCTest
 import UIKit
+import XCTest
 
 class CacheTests: XCTestCase {
 

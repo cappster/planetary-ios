@@ -13,15 +13,15 @@ class FollowOperation: AsynchronousOperation {
 
     var identity: Identity
     private(set) var error: Error?
-    
+
     init(identity: Identity) {
         self.identity = identity
         super.init()
     }
-    
+
     override func main() {
         Log.info("FollowOperation started.")
-        
+
         let configuredIdentity = AppConfiguration.current?.identity
         let loggedInIdentity = Bots.current.identity
         guard loggedInIdentity != nil, loggedInIdentity == configuredIdentity else {
@@ -30,8 +30,8 @@ class FollowOperation: AsynchronousOperation {
             self.finish()
             return
         }
-        
-        Bots.current.follow(self.identity) { [weak self] (contact, error) in
+
+        Bots.current.follow(self.identity) { [weak self] (_, error) in
             Log.optional(error)
             CrashReporting.shared.reportIfNeeded(error: error)
             self?.error = error
@@ -39,5 +39,4 @@ class FollowOperation: AsynchronousOperation {
             self?.finish()
         }
     }
-    
 }

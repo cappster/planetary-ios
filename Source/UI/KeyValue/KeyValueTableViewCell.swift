@@ -34,7 +34,7 @@ class KeyValueTableViewCell: UITableViewCell, KeyValueUpdateable {
         constraint.priority = .defaultHigh
         constraint.isActive = true
     }
-    
+
     override func prepareForReuse() {
         super.prepareForReuse()
         self.keyValueView.showSkeleton()

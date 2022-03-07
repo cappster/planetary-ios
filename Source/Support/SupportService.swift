@@ -10,13 +10,12 @@ import Foundation
 import UIKit
 
 enum SupportArticle {
-    
+
     case faq
     case privacyPolicy
     case termsOfService
     case whatIsPlanetary
     case editPost
-    
 }
 
 enum SupportReason: String, CaseIterable {
@@ -35,19 +34,18 @@ enum SupportReason: String, CaseIterable {
 protocol SupportService {
 
     func mainViewController() -> UIViewController?
-    
+
     func articleViewController(_ article: SupportArticle) -> UIViewController?
-    
+
     func myTicketsViewController(from reporter: Identity?) -> UIViewController?
-    
+
     func newTicketViewController() -> UIViewController?
-    
+
     func newTicketViewController(from reporter: Identity, reporting identity: Identity, name: String) -> UIViewController?
-    
+
     func newTicketViewController(from reporter: Identity, reporting content: KeyValue, reason: SupportReason, view: UIView?) -> UIViewController?
-    
+
     func id(for article: SupportArticle) -> String
-    
+
     func article(for id: String) -> SupportArticle?
-    
 }

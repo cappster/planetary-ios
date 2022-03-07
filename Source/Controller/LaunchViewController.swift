@@ -6,10 +6,10 @@
 //  Copyright © 2019 Verse Communications Inc. All rights reserved.
 //
 
-import Foundation
-import UIKit
-import Logger
 import Analytics
+import Foundation
+import Logger
+import UIKit
 
 class LaunchViewController: UIViewController {
 
@@ -27,7 +27,7 @@ class LaunchViewController: UIViewController {
         let splashImageView = UIImageView(image: UIImage(named: "launch"))
         splashImageView.contentMode = .scaleAspectFit
         Layout.center(splashImageView, in: self.view, size: CGSize(width: 188, height: 248))
-        
+
         self.launch()
     }
 
@@ -56,8 +56,7 @@ class LaunchViewController: UIViewController {
         // if configuration and is required then onboard
         if let configuration = AppConfiguration.current,
             let identity = configuration.identity,
-            Onboarding.status(for: identity) == .started
-        {
+            Onboarding.status(for: identity) == .started {
             self.launchIntoOnboarding(status: .started)
             return
         }
@@ -65,8 +64,7 @@ class LaunchViewController: UIViewController {
         // if configuration and not started then already onboarded
         if let configuration = AppConfiguration.current,
             let identity = configuration.identity,
-            Onboarding.status(for: identity) == .notStarted
-        {
+            Onboarding.status(for: identity) == .notStarted {
             Onboarding.set(status: .completed, for: identity)
         }
 
@@ -88,15 +86,15 @@ class LaunchViewController: UIViewController {
         guard let network = configuration.network else { return }
         guard let secret = configuration.secret else { return }
         guard let bot = configuration.bot else { return }
-        
+
         bot.login(network: network, hmacKey: configuration.hmacKey, secret: secret) { error in
-            
+
             Log.optional(error)
             CrashReporting.shared.reportIfNeeded(error: error,
                                                  metadata: ["action": "login-from-launch",
                                                             "network": network,
                                                             "identity": secret.identity])
-            
+
             guard error == nil else {
                 let controller = UIAlertController(title: Text.error.text,
                                                    message: Text.Error.login.text,
@@ -107,17 +105,17 @@ class LaunchViewController: UIViewController {
                         // Don't report error here becuase the normal path is to actually receive
                         // a notLoggedIn error
                         Log.optional(err)
-                        
+
                         ssbDropIndexData()
-                        
+
                         Analytics.shared.forget()
                         CrashReporting.shared.forget()
-                        
+
                         AppController.shared.relaunch()
                     }
                 }
                 controller.addAction(action)
-                
+
                 let reset = UIAlertAction(title: "Reset", style: .destructive) { _ in
                     Log.debug("Resetting current configuration and restarting launch...")
                     AppConfiguration.current?.unapply()
@@ -125,24 +123,24 @@ class LaunchViewController: UIViewController {
                         // Don't report error here becuase the normal path is to actually receive
                         // a notLoggedIn error
                         Log.optional(err)
-                        
+
                         ssbDropIndexData()
-                        
+
                         Analytics.shared.forget()
                         CrashReporting.shared.forget()
-                        
+
                         AppController.shared.relaunch()
                     }
                 }
                 controller.addAction(reset)
 
                 AppController.shared.showAlertController(with: controller, animated: true)
-                
+
                 return
             }
-            
+
             self.launchIntoMain()
-            
+
             bot.about { (about, aboutErr) in
                 Log.optional(aboutErr)
                 // No need to show an alert to the user as we can fetch the current about later
@@ -158,15 +156,13 @@ class LaunchViewController: UIViewController {
     }
 
     private func launchIntoOnboarding(status: Onboarding.Status = .notStarted,
-                                      simulate: Bool = false)
-    {
+                                      simulate: Bool = false) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             AppController.shared.showOnboardingViewController(status, simulate)
         }
     }
 
     private func launchIntoMain() {
-
 
         // no need to start a sync here, we can do it later
         // also, user is already logged in

@@ -6,12 +6,12 @@
 //  Copyright © 2020 Verse Communications Inc. All rights reserved.
 //
 
-import Foundation
 import Down
+import Foundation
 import Logger
 
 extension String {
-    
+
     func decodeMarkdown(small: Bool = false) -> NSAttributedString {
         let down = Down(markdownString: self)
         let styler = MarkdownStyler(small: small)
@@ -23,7 +23,7 @@ extension String {
             addUnformattedLinks(in: mutableAttributedString, styler: styler)
             addUnformattedMentions(in: mutableAttributedString, styler: styler)
             return mutableAttributedString
-        } catch let error {
+        } catch {
             Log.optional(error)
             CrashReporting.shared.reportIfNeeded(error: error)
             return NSAttributedString(string: self)
@@ -68,7 +68,7 @@ extension String {
             }
         }
     }
-    
+
     func addUnformattedMentions(in mutableAttributedString: NSMutableAttributedString, styler: DownStyler) {
         let string = mutableAttributedString.string
         let range = NSRange(location: 0, length: string.utf16.count)
@@ -95,5 +95,4 @@ extension String {
             mutableAttributedString.replaceCharacters(in: range, with: mutableAttributedLink)
         }
     }
-    
 }

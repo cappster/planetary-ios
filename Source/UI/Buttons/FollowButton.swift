@@ -6,14 +6,14 @@
 //  Copyright © 2019 Verse Communications Inc. All rights reserved.
 //
 
-import UIKit
-import Logger
 import Analytics
+import Logger
+import UIKit
 
 class FollowButton: PillButton {
 
     var operationQueue = OperationQueue()
-    
+
     var star: Star? {
         didSet {
             if star == nil {
@@ -23,7 +23,7 @@ class FollowButton: PillButton {
             }
         }
     }
-    
+
     var relationship: Relationship? {
         didSet {
             NotificationCenter.default.removeObserver(self)
@@ -58,10 +58,10 @@ class FollowButton: PillButton {
         }
 
         Analytics.shared.trackDidTapButton(buttonName: "follow")
-        
+
         let shouldFollow = self.isSelected
 
-        //AppController.shared.showProgress()
+        // AppController.shared.showProgress()
         self.isEnabled = false
         if shouldFollow {
             if let star = self.star {

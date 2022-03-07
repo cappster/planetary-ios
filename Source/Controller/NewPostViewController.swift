@@ -6,10 +6,10 @@
 //  Copyright © 2019 Verse Communications Inc. All rights reserved.
 //
 
-import Foundation
-import UIKit
-import Logger
 import Analytics
+import Foundation
+import Logger
+import UIKit
 
 class NewPostViewController: ContentViewController {
 
@@ -50,7 +50,7 @@ class NewPostViewController: ContentViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         let item = UIBarButtonItem(image: UIImage.verse.dismiss,
                                    style: .plain,
                                    target: self,
@@ -58,14 +58,14 @@ class NewPostViewController: ContentViewController {
         item.tintColor = .secondaryAction
         item.accessibilityLabel = Text.done.text
         self.navigationItem.leftBarButtonItem = item
-        
+
         if let draft = Draft.current {
             self.textView.attributedText = draft.attributedText
             self.galleryView.add(draft.images)
             print("Restored draft")
         }
     }
-    
+
     override func willMove(toParent parent: UIViewController?) {
         super.willMove(toParent: parent)
         self.parent?.presentationController?.delegate = self
@@ -92,7 +92,7 @@ class NewPostViewController: ContentViewController {
     }
 
     @objc private func photoButtonTouchUpInside(sender: AnyObject) {
-        
+
         Analytics.shared.trackDidTapButton(buttonName: "attach_photo")
         self.imagePicker.present(from: sender, controller: self) {
             [weak self] image in
@@ -109,21 +109,21 @@ class NewPostViewController: ContentViewController {
     func didPressPostButton(sender: AnyObject) {
         Analytics.shared.trackDidTapButton(buttonName: "post")
         self.buttonsView.postButton.isHidden = true
-        
+
         let hasText = self.textView.attributedText.length > 0
         let hasImages = !self.galleryView.images.isEmpty
-        
+
         guard hasText || hasImages else {
             return
         }
-        
+
         let text = self.textView.attributedText
         let post = Post(attributedText: text)
         let images = self.galleryView.images
 
         self.lookBusy()
         Bots.current.publish(post, with: images) {
-            [weak self] identifier, error in
+            [weak self] _, error in
             Log.optional(error)
             CrashReporting.shared.reportIfNeeded(error: error)
             if let error = error {
@@ -141,7 +141,7 @@ class NewPostViewController: ContentViewController {
         self.didPublish?(post)
         self.dismiss(animated: true)
     }
-    
+
     @objc private func dismissWithoutPost() {
         Draft.current = nil
         self.dismiss(animated: true)
@@ -150,7 +150,7 @@ class NewPostViewController: ContentViewController {
     // MARK: Animations
 
     private func lookBusy() {
-        //AppController.shared.showProgress()
+        // AppController.shared.showProgress()
         self.buttonsView.photoButton.isEnabled = false
         self.buttonsView.postButton.isEnabled = false
         self.buttonsView.previewToggle.isEnabled = false
@@ -163,7 +163,7 @@ class NewPostViewController: ContentViewController {
         self.buttonsView.postButton.isEnabled = true
         self.buttonsView.postButton.isHidden = false
         self.buttonsView.previewToggle.isEnabled = true
-    }   
+    }
 }
 
 extension NewPostViewController: ImageGalleryViewDelegate {
@@ -176,8 +176,7 @@ extension NewPostViewController: ImageGalleryViewDelegate {
 
     func imageGalleryView(_ view: ImageGalleryView,
                           didSelect image: UIImage,
-                          at indexPath: IndexPath)
-    {
+                          at indexPath: IndexPath) {
         self.confirm(
             message: Text.NewPost.confirmRemove.text,
             isDestructive: true,
@@ -188,10 +187,10 @@ extension NewPostViewController: ImageGalleryViewDelegate {
 }
 
 extension NewPostViewController: UIAdaptivePresentationControllerDelegate {
-    
+
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
         print("didDIsmisssss")
-        
+
         let hasText = self.textView.attributedText.length > 0
         let hasImages = !self.galleryView.images.isEmpty
 

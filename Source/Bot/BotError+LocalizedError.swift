@@ -9,7 +9,7 @@
 import Foundation
 
 extension BotError: LocalizedError {
-    
+
     var errorDescription: String? {
         switch self {
         case .alreadyLoggedIn:
@@ -32,5 +32,4 @@ extension BotError: LocalizedError {
             return "Not enough messages in repo"
         }
     }
-    
 }

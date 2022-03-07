@@ -9,7 +9,7 @@
 import Foundation
 
 struct CrashReporting {
-    
+
     static var shared: CrashReportingService = {
         #if DEBUG
         return NullCrashReporting()
@@ -21,5 +21,4 @@ struct CrashReporting {
         }
         #endif
     }()
-    
 }

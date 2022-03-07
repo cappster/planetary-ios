@@ -15,35 +15,35 @@ class AsynchronousOperation: Operation {
         case executing
         case finished
     }
-    
+
     private var _state = State.ready
     private let stateQueue = DispatchQueue(label: Bundle.main.bundleIdentifier! + ".op.state", attributes: .concurrent)
-    
+
     @objc private dynamic var state: State {
-        get { return stateQueue.sync { _state } }
+        get { stateQueue.sync { _state } }
         set { stateQueue.sync(flags: .barrier) { _state = newValue } }
     }
-    
-    override var isAsynchronous: Bool { return true }
+
+    override var isAsynchronous: Bool { true }
     override var isReady: Bool {
-        return super.isReady && state == .ready
+        super.isReady && state == .ready
     }
-    
+
     override var isExecuting: Bool {
-        return state == .executing
+        state == .executing
     }
-    
+
     override var isFinished: Bool {
-        return state == .finished
+        state == .finished
     }
-    
+
     override class func keyPathsForValuesAffectingValue(forKey key: String) -> Set<String> {
-        if ["isReady",  "isFinished", "isExecuting"].contains(key) {
+        if ["isReady", "isFinished", "isExecuting"].contains(key) {
             return [#keyPath(state)]
         }
         return super.keyPathsForValuesAffectingValue(forKey: key)
     }
-    
+
     override func start() {
         if isCancelled {
             finish()
@@ -55,7 +55,7 @@ class AsynchronousOperation: Operation {
     override func main() {
         fatalError("Implement in sublcass to perform task")
     }
-    
+
     final func finish() {
         if isExecuting {
             state = .finished

@@ -9,12 +9,12 @@
 import UIKit
 
 class PostCollectionViewCell: UICollectionViewCell {
-    
+
     private lazy var imageView: GalleryView = {
         let view = GalleryView()
         return view
     }()
-    
+
     private lazy var imageOpacityView: UIView = {
         let view = UIView()
         view.backgroundColor = .clear
@@ -22,7 +22,7 @@ class PostCollectionViewCell: UICollectionViewCell {
         view.layer.addSublayer(self.imageOpacityGradientLayer)
         return view
     }()
-    
+
     private lazy var imageOpacityGradientLayer: CAGradientLayer = {
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 40)
@@ -30,15 +30,15 @@ class PostCollectionViewCell: UICollectionViewCell {
                                 UIColor.black.withAlphaComponent(0.7).cgColor]
         return gradientLayer
     }()
-    
+
     private var imageViewSquareConstraint: NSLayoutConstraint?
     private var imageViewHeightConstraint: NSLayoutConstraint?
     private var imageViewBottomConstraint: NSLayoutConstraint?
-    
+
     /// Activate or deactivate this constraint to make text view have no height,
     /// for instance, if the text is empty
     var textViewZeroHeightConstraint = NSLayoutConstraint()
-    
+
     private lazy var textView: UITextView = {
         let view = UITextView.forAutoLayout()
         view.isEditable = false
@@ -58,16 +58,16 @@ class PostCollectionViewCell: UICollectionViewCell {
         view.backgroundColor = .cardBackground
         return view
     }()
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+
         self.contentView.clipsToBounds = true
         self.contentView.backgroundColor = .cardBackground
         self.contentView.layer.borderColor = UIColor.cardBorder.cgColor
         self.contentView.layer.borderWidth = 0.5
         self.contentView.layer.cornerRadius = 5
-        
+
         Layout.fillTop(of: self.contentView, with: self.imageView, insets: .zero, respectSafeArea: false)
         self.imageViewSquareConstraint = self.imageView.constrainSquare()
         self.imageViewHeightConstraint = self.imageView.constrainHeight(to: 0)
@@ -76,7 +76,7 @@ class PostCollectionViewCell: UICollectionViewCell {
 
         Layout.fillBottom(of: self.contentView, with: self.headerView, insets: .zero, respectSafeArea: false)
         self.headerView.constrainHeight(to: 40)
-        
+
         self.contentView.insertSubview(self.imageOpacityView, belowSubview: self.headerView)
         imageOpacityView.constrain(attribute: .top, toAttribute: .top, ofView: self.headerView)
         imageOpacityView.constrain(attribute: .bottom, toAttribute: .bottom, ofView: self.headerView)
@@ -89,7 +89,7 @@ class PostCollectionViewCell: UICollectionViewCell {
         self.textView.constrainTrailingToSuperview()
         self.imageViewBottomConstraint = self.textView.pinTop(toBottomOf: self.imageView)
         self.textView.pinBottom(toTopOf: self.headerView)
-        
+
         self.textViewZeroHeightConstraint = NSLayoutConstraint(item: self.textView,
                                                                attribute: .height,
                                                                relatedBy: .equal,
@@ -99,11 +99,11 @@ class PostCollectionViewCell: UICollectionViewCell {
                                                                constant: 0)
         self.textViewZeroHeightConstraint.isActive = false
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func prepareForReuse() {
         super.prepareForReuse()
         self.imageViewSquareConstraint?.isActive = false
@@ -112,18 +112,18 @@ class PostCollectionViewCell: UICollectionViewCell {
         self.textViewZeroHeightConstraint.isActive = false
         self.textView.text = nil
         // self.textView.textContainer.maximumNumberOfLines = 8
-        
+
         self.headerView.backgroundColor = .cardBackground
         self.headerView.isOpaque = true
         self.headerView.startSkeletonAnimation()
     }
-    
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         self.contentView.layer.borderColor = UIColor.cardBorder.cgColor
         self.contentView.setNeedsDisplay()
     }
-    
+
     func update(keyValue: KeyValue) {
         guard let post = keyValue.value.content.post else {
             return
@@ -134,10 +134,10 @@ class PostCollectionViewCell: UICollectionViewCell {
             self.imageViewHeightConstraint?.isActive = false
             // self.textView.textContainer.maximumNumberOfLines = 3
         }
-        
+
         self.headerView.stopSkeletonAnimation()
         self.headerView.update(with: keyValue)
-        
+
         let textWithoutGallery = post.text.withoutGallery()
         if textWithoutGallery.withoutSpacesOrNewlines.isEmpty {
             self.textView.text = ""
@@ -147,13 +147,12 @@ class PostCollectionViewCell: UICollectionViewCell {
             self.textViewZeroHeightConstraint.isActive = true
         } else {
             self.textView.attributedText = textWithoutGallery.decodeMarkdown(small: true)
-            
+
             if textWithoutGallery.isSingleEmoji {
                 let size: CGFloat = self.contentView.bounds.width / 2
                 self.textView.font = UIFont.smallPost.body.withSize(size)
                 self.textView.textAlignment = .center
             }
         }
-        
     }
 }

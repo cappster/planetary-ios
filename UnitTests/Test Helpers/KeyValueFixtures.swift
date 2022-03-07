@@ -11,9 +11,9 @@ import Foundation
 /// Easy access to `KeyValue` data for testing.
 struct KeyValueFixtures {
     static let keyValueWithReceivedSeq = keyValue(fromFixture: "KeyValueWithReceivedSeq.json")
-    
+
     static func keyValue(author: Identity) -> KeyValue {
-        return KeyValue(
+        KeyValue(
             key: Identifier("TestPostId=.ed25519"),
             value: Value(
                 author: author,
@@ -22,14 +22,14 @@ struct KeyValueFixtures {
                 previous: nil,
                 sequence: 0,
                 signature: Identifier("signature"),
-                timestamp: 2684029486000 // 2055
+                timestamp: 2_684_029_486_000 // 2055
             ),
-            timestamp: 2684029486000, // 2055
-            receivedSeq: 55555,
+            timestamp: 2_684_029_486_000, // 2055
+            receivedSeq: 55_555,
             hashedKey: "hashedKey"
         )
     }
-    
+
     // Convenience func to load and return JSON resource file as Data.
     static func keyValue(fromFixture jsonResourceName: String) -> KeyValue {
         let url = Bundle.current.url(forResource: jsonResourceName, withExtension: nil)!

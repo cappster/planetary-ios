@@ -2,7 +2,7 @@
 // in order to automatically export their strings to the localization files
 extension Text {
     static var localizableTypes: [Localizable.Type] {
-        return [Text.self,
+        [Text.self,
                 Text.Blocking.self,
                 Text.ImagePicker.self,
                 Text.NewPost.self,
@@ -63,7 +63,7 @@ enum Text: String, Localizable, CaseIterable {
     case sendAnalytics = "Send analytics to Planetary"
     case dontSendAnalytics = "Don't send analytics at all"
     case analyticsMessage = "We would like to capture anonymized data about your use of the app - and crash reports when something goes wrong - so we can make the application better."
-    
+
     case loadingUpdates = "Planetary is searching for updates\non the peer to peer decentralized web."
 
     case post = "Post"
@@ -91,22 +91,22 @@ enum Text: String, Localizable, CaseIterable {
     case following = "Following"
     case followedBy = "Followed By"
     case isFollowingYou = "is currently following you"
-    
+
     case followedByCount = "Followed by {{ count }}"
     case followingCount = "Following {{ count }}"
     case inYourNetwork = " in your network"
-    
+
     case followedByShortCount = "{{ count }} Followers"
 
     case unfollow = "Stop following"
 
     case identifierCopied = "Identifier copied to clipboard"
-    
+
     case copyMessageIdentifier = "Copy Message Identifier"
-    
+
     case copyPublicIdentifier = "Copy Profile Identifier"
     case sharePublicIdentifier = "Share Public Identifier"
-    
+
     case shareThisProfile = "Share This Profile"
     case shareThisMessage = "Share This Message"
     case shareThisProfileText = "Find {{ who }} on Planetary at {{ link }}"
@@ -134,7 +134,7 @@ enum Text: String, Localizable, CaseIterable {
     case countOnlinePeers = "{{ count }} ONLINE PEERS"
     case countLocalPeers = "{{ count }} LOCAL PEERS"
     case lastSynced = "SYNCED: {{ when }}"
-    
+
     case channels = "Hashtags"
     case select = "Select"
     case home = "For You"
@@ -148,11 +148,11 @@ enum Text: String, Localizable, CaseIterable {
     case like = "Like"
 
     case debug = "Debug"
-    
+
     case join = "Join"
     case redeemInvitation = "Redeem an invitation"
     case pasteAddress = "Token"
-    
+
     case refresh = "Refresh"
     case markdownSupported = "Markdown preview"
 }
@@ -223,7 +223,7 @@ extension Text {
             case start = "\nA new kind of social\nnetwork for creative,\nindependent people"
 
             static var namespace: String {
-                return "OnboardingStepTitle"
+                "OnboardingStepTitle"
             }
         }
 
@@ -357,7 +357,7 @@ extension Text {
 }
 
 extension Text {
-    
+
     enum Debug: String, Localizable, CaseIterable {
         case debugTitle = "Hacker Mode"
         case debugMenu = "Dangerous and powerful debug menu"
@@ -366,7 +366,7 @@ extension Text {
 }
 
 extension Text {
-    
+
     enum Error: String, Localizable, CaseIterable {
         case login = "The peer to peer engine failed to start. Please use Restart to repair and restart it or use Ignore to browse the content that is already fetched to your device."
         case unexpected = "Something unexpected happened."

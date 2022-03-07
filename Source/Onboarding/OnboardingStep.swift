@@ -6,9 +6,9 @@
 //  Copyright © 2019 Verse Communications Inc. All rights reserved.
 //
 
+import Analytics
 import Foundation
 import UIKit
-import Analytics
 
 protocol OnboardingStepDelegate: class {
 
@@ -20,20 +20,20 @@ protocol OnboardingStepDelegate: class {
 class OnboardingStepData {
     var allowedBackup = false
     var allowedContacts = false
-    var birthdate: Date? = nil
-    var bio: String? = nil
-    var code: String? = nil
-    var context: Onboarding.Context? = nil
+    var birthdate: Date?
+    var bio: String?
+    var code: String?
+    var context: Onboarding.Context?
     var following: [Identity] = []
-    var image: UIImage? = nil
+    var image: UIImage?
     var joinedDirectory = false
     var publicWebHosting = false
-    var name: String? = nil
-    var phone: String? = nil
+    var name: String?
+    var phone: String?
     var simulated = false
 
     var analyticsData: Analytics.OnboardingStepData {
-        return Analytics.OnboardingStepData(allowedBackup: allowedBackup,
+        Analytics.OnboardingStepData(allowedBackup: allowedBackup,
                                             allowedContacts: allowedContacts,
                                             bio: bio,
                                             followingCount: following.count,
@@ -87,7 +87,7 @@ class OnboardingStep: NSObject {
         }
 
         var analyticsStep: Analytics.OnboardingStep {
-            return Analytics.OnboardingStep(rawValue: rawValue) ?? .unknown
+            Analytics.OnboardingStep(rawValue: rawValue) ?? .unknown
         }
     }
 

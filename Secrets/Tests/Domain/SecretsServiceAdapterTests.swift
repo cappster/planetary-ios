@@ -5,8 +5,8 @@
 //  Created by Martin Dutra on 8/12/21.
 //
 
-import XCTest
 @testable import Secrets
+import XCTest
 
 final class SecretsServiceAdapterTests: XCTestCase {
 
@@ -33,5 +33,4 @@ final class SecretsServiceAdapterTests: XCTestCase {
         service = SecretsServiceAdapter(bundle: .main)
         XCTAssertNil(service.get(key: "posthog"))
     }
-
 }

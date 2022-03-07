@@ -10,11 +10,10 @@ import Foundation
 import UIKit
 
 extension UIFont {
-    
+
     // this translates the `tracking` from an Adobe-compatible value
     // based on the spacing and the font size
     func kerning(_ tracking: CGFloat) -> CGFloat {
-        return self.pointSize * tracking / 1000
+        self.pointSize * tracking / 1_000
     }
-    
 }

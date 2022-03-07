@@ -12,13 +12,13 @@ let package = Package(
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "Logger",
-            targets: ["Logger"]),
+            targets: ["Logger"])
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         .package(name: "CocoaLumberjack",
                  url: "https://github.com/CocoaLumberjack/CocoaLumberjack.git",
-                 from: "3.7.0"),
+                 from: "3.7.0")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -31,6 +31,6 @@ let package = Package(
         .testTarget(
             name: "LoggerTests",
             dependencies: ["Logger"],
-            path: "Tests"),
+            path: "Tests")
     ]
 )

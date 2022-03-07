@@ -18,7 +18,6 @@ struct Address: Codable {
     let availability: Double
 }
 
-
 struct Pub: ContentCodable {
     let type: ContentType
     let address: PubAddress
@@ -28,15 +27,14 @@ struct PubAddress: Codable {
     let key: Identifier
     let host: String
     let port: UInt
-    
+
     var multipeer: String {
-        return "net:\(self.host):\(self.port)~shs:\(self.key.id)"
+        "net:\(self.host):\(self.port)~shs:\(self.key.id)"
     }
-    
+
     func toPeer() -> Peer {
-        return Peer(tcpAddr: "\(self.host):\(self.port)", pubKey: self.key)
+        Peer(tcpAddr: "\(self.host):\(self.port)", pubKey: self.key)
     }
-    
 }
 
 struct KnownPub: Hashable {
@@ -49,7 +47,7 @@ struct KnownPub: Hashable {
     let WorkedLast: String
     let LastError: String
     let redeemed: Date?
-    
+
     func hash(into hasher: inout Hasher) {
         hasher.combine(self.AddressID)
     }

@@ -16,7 +16,7 @@ class AboutsMenu: UIView {
             self.tableView.reloadData()
             self.isHidden = self.abouts.isEmpty
             self.tableView.heightConstraint?.constant = self.tableView.rowHeight * CGFloat(min(self.abouts.count, 3))
-            
+
             if self.abouts.count > 3 {
                 // this makes it clear to the user that the area is scrollable
                 self.tableView.flashScrollIndicators()
@@ -100,7 +100,7 @@ class AboutsMenu: UIView {
 extension AboutsMenu: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.abouts.count
+        self.abouts.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -131,7 +131,7 @@ private class MiniAboutTableViewCell: UITableViewCell {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func prepareForReuse() {
         super.prepareForReuse()
         aboutView.reset()

@@ -9,12 +9,11 @@
 import Foundation
 
 extension NSAttributedString {
-    
+
     func encodeMarkdown() -> String {
         let attributedString = NSMutableAttributedString(attributedString: self)
         attributedString.removeHashtagLinkAttributes()
         attributedString.replaceMentionLinkAttributesWithMarkdown()
         return attributedString.string
     }
-    
 }

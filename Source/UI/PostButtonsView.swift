@@ -20,7 +20,7 @@ class PostButtonsView: UIView {
         button.setImage(UIImage.verse.newPostOpenLibrary, for: .normal)
         return button
     }()
-    
+
     let markdownNoticeLabel: UILabel = {
         let label = UILabel.forAutoLayout()
         label.font = UIFont.systemFont(ofSize: 13, weight: .regular)

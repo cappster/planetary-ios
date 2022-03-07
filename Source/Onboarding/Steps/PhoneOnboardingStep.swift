@@ -7,9 +7,9 @@
 //
 
 import Foundation
+import Logger
 import PhoneNumberKit
 import UIKit
-import Logger
 
 class PhoneOnboardingStep: OnboardingStep {
 

@@ -17,11 +17,11 @@ struct DatabaseFixture {
     let secret: Secret
     let network: NetworkKey
     let identities: [Identity]
-    
+
     var owner: Identity {
         secret.identity
     }
-    
+
     static let exampleFeed = DatabaseFixture(
         fileName: "Feed_example.json",
         secret: Secret(from: """
@@ -41,7 +41,7 @@ struct DatabaseFixture {
             "@MhOkMP3jDCgubbSVl5cVrZiPI3QodCNXhOnsPAzdSwE=.ed25519" // privUser
         ]
     )
-    
+
     static let bigFeed = DatabaseFixture(
         fileName: "Feed_big.json",
         secret: Secret(from: """
@@ -54,7 +54,7 @@ struct DatabaseFixture {
             """)!,
         network: testNetworkKey,
         identities: [
-            "@0uOwBrHIeiRK7lcvpLwjSFkcS3UHSQb/jyN52zf+J6Y=.ed25519", // Rabble
+            "@0uOwBrHIeiRK7lcvpLwjSFkcS3UHSQb/jyN52zf+J6Y=.ed25519" // Rabble
         ]
     )
 }

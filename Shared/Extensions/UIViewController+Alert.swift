@@ -7,11 +7,11 @@
 //
 
 import Foundation
-import UIKit
 import Logger
+import UIKit
 
 extension UIViewController {
-    
+
     /// Presents an error message to the user in an alert box.
     /// - Parameter error: The error to present to the user. The `localizedDescription` is used for the error message.
     func alert(error: Error) {
@@ -25,10 +25,10 @@ extension UIViewController {
                                             controller.dismiss(animated: true)
         }
         controller.addAction(cancelAction)
-        
+
         self.present(alertController: controller)
     }
-    
+
     /// Presents an alert box to the user with a single button.
     ///
     /// - Parameters:
@@ -44,14 +44,14 @@ extension UIViewController {
                message: String,
                cancelTitle: String = Text.cancel.text,
                cancelClosure: (() -> Void)? = nil) {
-        
+
         let cancel = UIAlertAction(title: cancelTitle, style: .cancel) { _ in
             cancelClosure?()
         }
 
         self.choose(from: [cancel], title: title, message: message, sourceView: sourceView)
     }
-    
+
     /// Presents a modal dialog prompting the user to confirm an action.
     ///
     /// - Parameters:
@@ -73,7 +73,7 @@ extension UIViewController {
                  cancelClosure: (() -> Void)? = nil,
                  confirmTitle: String = Text.ok.text,
                  confirmClosure: @escaping (() -> Void)) {
-        
+
         let confirm = UIAlertAction(title: confirmTitle,
                                     style: isDestructive ? .destructive : .default) { _ in
             confirmClosure()
@@ -102,7 +102,7 @@ extension UIViewController {
                 title: String? = nil,
                 message: String? = nil,
                 sourceView: AnyObject? = nil) {
-        
+
         let style: UIAlertController.Style = sourceView != nil ? .actionSheet : .alert
         let controller = UIAlertController(title: title,
                                            message: message,
@@ -111,7 +111,7 @@ extension UIViewController {
         for action in actions { controller.addAction(action) }
         self.present(alertController: controller, sourceView: sourceView)
     }
-    
+
     /// Convenience extension to allow UIAlertController to be presented
     /// on iPads.
     /// - Parameters:
@@ -132,11 +132,11 @@ extension UIViewController {
             Log.error(errorMessage)
             assertionFailure(errorMessage)
         }
-        
+
         controller.configurePopover(from: sourceView, rect: sourceRect)
         present(controller, animated: animated)
     }
-    
+
     /// Configures the UIViewController to be presented from the correct source location when it is displayed in a
     /// popover.
     /// - Parameter sourceView: the view that the popover arrow should point to. Should be a subclass of either
@@ -148,10 +148,10 @@ extension UIViewController {
               let sourceView = sourceView else {
                   return
         }
-        
+
         let sourceUIView = sourceView as? UIView
         let sourceBarButton = sourceView as? UIBarButtonItem
-        
+
         popover.sourceView = sourceUIView
         popover.barButtonItem = sourceBarButton
         if let rect = rect ?? sourceView.bounds {

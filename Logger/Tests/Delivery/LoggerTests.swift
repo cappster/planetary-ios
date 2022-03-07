@@ -5,8 +5,8 @@
 //  Created by Martin Dutra on 22/11/21.
 //
 
-import XCTest
 @testable import Logger
+import XCTest
 
 final class LoggerTests: XCTestCase {
 
@@ -96,5 +96,4 @@ final class LoggerTests: XCTestCase {
     func testStaticFileUrls() {
         XCTAssertEqual(Log.fileUrls, service.fileUrls)
     }
-
 }

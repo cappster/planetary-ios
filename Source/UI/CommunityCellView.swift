@@ -89,7 +89,7 @@ class CommunityCellView: UIView {
         self.followButton.star = star
         self.setRelationship(to: star.feed)
     }
-    
+
     func setIdentityText(identity: String) {
         self.identityLabel.text = String(identity.prefix(8))
     }
@@ -117,7 +117,6 @@ class CommunityCellView: UIView {
         self.imageLoadingTask?.cancel()
         self.imageView.image = UIImage.verse.missingAbout
     }
-
 }
 
 class CommunityTableViewCell: UITableViewCell {

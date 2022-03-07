@@ -1,10 +1,8 @@
 import XCTest
 
-
-
 class ViewDatabaseTests: XCTestCase {
 
-    var tmpURL :URL = URL(string: "unset")!
+    var tmpURL = URL(string: "unset")!
     var vdb = ViewDatabase()
     let expMsgCount = 81
     let fixture = DatabaseFixture.exampleFeed
@@ -15,7 +13,7 @@ class ViewDatabaseTests: XCTestCase {
 
         do {
             self.vdb.close()
-            
+
             // get random location for the new db
             self.tmpURL = NSURL.fileURL(withPathComponents: [NSTemporaryDirectory(), "viewDBtest-feedFill2"])!
 
@@ -24,26 +22,26 @@ class ViewDatabaseTests: XCTestCase {
             } catch {
                 // ignore - most likely not exists
             }
-           
+
             try FileManager.default.createDirectory(at: self.tmpURL, withIntermediateDirectories: true)
-            
+
             // open DB
             let  damnPath = self.tmpURL.absoluteString.replacingOccurrences(of: "file://", with: "")
-            try self.vdb.open(path: damnPath, user: testFeeds[4], maxAge: -60*60*24*30*48) // 48 month (so roughtly until 2023)
-            
+            try self.vdb.open(path: damnPath, user: testFeeds[4], maxAge: -60 * 60 * 24 * 30 * 48) // 48 month (so roughtly until 2023)
+
             // get test messages from JSON
             let msgs = try JSONDecoder().decode([KeyValue].self, from: data)
             XCTAssertNotNil(msgs)
             // +1 to fake-cause the duplication bug
-            XCTAssertEqual(msgs.count, expMsgCount+1)
-            
+            XCTAssertEqual(msgs.count, expMsgCount + 1)
+
             // put them all in
             try vdb.fillMessages(msgs: msgs)
         } catch {
             XCTFail("\(error)")
         }
     }
-    
+
     override func tearDown() {
         vdb.close()
     }
@@ -52,7 +50,7 @@ class ViewDatabaseTests: XCTestCase {
         do {
             // find them all
             let stats = try self.vdb.stats()
-            XCTAssertEqual(stats[.messages], expMsgCount-8) // 8 tag messages from old test data (TODO better test data creation)
+            XCTAssertEqual(stats[.messages], expMsgCount - 8) // 8 tag messages from old test data (TODO better test data creation)
             XCTAssertEqual(stats[.authors], 6)
             XCTAssertEqual(stats[.abouts], 6)
             XCTAssertEqual(stats[.abouts], stats[.authors]) // authors with missing abouts will not be shown
@@ -63,7 +61,7 @@ class ViewDatabaseTests: XCTestCase {
             XCTFail("\(error)")
         }
     }
-    
+
     func test10_names() {
         do {
             for (i, f) in testFeeds.enumerated() {
@@ -90,8 +88,8 @@ class ViewDatabaseTests: XCTestCase {
             XCTFail("\(error)")
         }
     }
-    
-    func test11_images()  {
+
+    func test11_images() {
         do {
             for (i, f) in testFeeds.enumerated() {
                 if let about = try self.vdb.getAbout(for: f) {
@@ -122,12 +120,12 @@ class ViewDatabaseTests: XCTestCase {
             XCTFail("\(error)")
         }
     }
-    
+
     func test20_follows() {
         do {
             for (i, f) in testFeeds.enumerated() {
                 let follows: [Identity] = try self.vdb.getFollows(feed: f)
-                
+
                 switch i {
                 case 0:
                     XCTAssertEqual(follows.count, 1)
@@ -155,12 +153,12 @@ class ViewDatabaseTests: XCTestCase {
             XCTFail("\(error)")
         }
     }
-    
+
     func test21_followedBy() {
         do {
             for (i, f) in testFeeds.enumerated() {
                 let follows: [Identity] = try self.vdb.followedBy(feed: f)
-                
+
                 switch i {
                 case 0:
                     XCTAssertEqual(follows.count, 2)
@@ -193,7 +191,7 @@ class ViewDatabaseTests: XCTestCase {
         do {
             for (i, f) in testFeeds.enumerated() {
                 let blocks = try self.vdb.getBlocks(feed: f)
-                
+
                 switch i {
                 case 0:
                     XCTAssertEqual(blocks.count, 1)
@@ -209,13 +207,12 @@ class ViewDatabaseTests: XCTestCase {
                 default:
                     XCTFail("unhandled feed: \(i)")
                 }
-
             }
         } catch {
             XCTFail("\(error)")
         }
     }
-    
+
     func test231_blockedBy() {
         do {
             for (i, f) in testFeeds.enumerated() {
@@ -235,13 +232,12 @@ class ViewDatabaseTests: XCTestCase {
                 default:
                     XCTFail("unhandled feed: \(i)")
                 }
-                
             }
         } catch {
             XCTFail("\(error)")
         }
     }
-    
+
     func test23_friends() {
         do {
             for (i, f) in testFeeds.enumerated() {
@@ -277,7 +273,7 @@ class ViewDatabaseTests: XCTestCase {
             XCTAssertEqual(replies.count, 13)
             for (i, kv) in replies.enumerated() {
                 XCTAssertNil(kv.value.content.typeException, "type exception on reply \(i)")
-                
+
                 switch i {
                 case 0:
                     XCTAssertEqual(kv.key, "%A779Qiywc+HJoMT1xfmuqGymyS9pnjNal+WfHBgk2GQ=.sha256")
@@ -359,8 +355,7 @@ class ViewDatabaseTests: XCTestCase {
             XCTFail("\(error)")
         }
     }
-    
-    
+
     func test40_feed_counts() {
         do {
             for (i, tf) in testFeeds.enumerated() {
@@ -384,7 +379,7 @@ class ViewDatabaseTests: XCTestCase {
             XCTFail("\(error)")
         }
     }
-    
+
     func test41_feed() {
         do {
             let replies = try self.vdb.feed(for: testFeeds[4])
@@ -414,7 +409,7 @@ class ViewDatabaseTests: XCTestCase {
         let dataProxy = try self.vdb.paginated(feed: testFeeds[4])
         let prefetchedCount = 2
         XCTAssertEqual(dataProxy.count, 3)
-        for idx in 0...prefetchedCount-1 {
+        for idx in 0...prefetchedCount - 1 {
             guard let kv = dataProxy.keyValueBy(index: idx) else {
                 XCTFail("failed to get KV for index \(idx)")
                 continue
@@ -424,7 +419,7 @@ class ViewDatabaseTests: XCTestCase {
             switch idx {
             case 0:
                 XCTAssertEqual(kv.key, "%mGqnXFLLANmscYjQCafniOTbnTC4RoRP8lZNlswaCdc=.sha256")
-                
+
                 XCTAssertEqual(kv.value.content.post?.text, "no one would mention themselves.. right [@privateUser](@MhOkMP3jDCgubbSVl5cVrZiPI3QodCNXhOnsPAzdSwE=.ed25519)???")
             case 1:
                 XCTAssertEqual(kv.key, "%KfVCyfVWiFAS75sSura943LTN/ylGvYBfBtfzZkRO28=.sha256")
@@ -432,7 +427,7 @@ class ViewDatabaseTests: XCTestCase {
             case 2:
                 XCTAssertEqual(kv.key, "%7TK9l4TT0yc8PCarcnLZEuxb0FtShl2M8vvbCSjceXY=.sha256")
                 XCTAssertEqual(kv.value.content.post?.text, "so what?")
-                
+
             default:
                 XCTFail("unhandled reply: \(idx)")
             }
@@ -455,7 +450,7 @@ class ViewDatabaseTests: XCTestCase {
             XCTFail("\(error)")
         }
     }
-    
+
     func test51_mentions_images() {
         let k = "%2AyeVqqLtRZf8KuJh2yz3fOh1zpfBYWqFnw2ZlNPs3A=.sha256"
         do {
@@ -472,7 +467,7 @@ class ViewDatabaseTests: XCTestCase {
             XCTFail("\(error)")
         }
     }
-    
+
     func test61_has_blobs() {
         let k = "%jxj5ilzRk1SKTLp11BVGsJvcmgf+ArwxnKNVb6KWYs4=.sha256"
         do {
@@ -496,7 +491,7 @@ class ViewDatabaseTests: XCTestCase {
             XCTAssertEqual(b[0].name, "blob")
             XCTAssertEqual(b[0].metadata?.dimensions?.width, 100)
             XCTAssertEqual(b[0].metadata?.dimensions?.height, 100)
-            XCTAssertEqual(b[0].metadata?.numberOfBytes, 143333)
+            XCTAssertEqual(b[0].metadata?.numberOfBytes, 143_333)
             XCTAssertEqual(b[0].metadata?.mimeType, "image/jpeg")
         } catch {
             XCTFail("\(error)")
@@ -545,7 +540,7 @@ class ViewDatabaseTests: XCTestCase {
             XCTAssertNotEqual(msgs[0].value.author, DatabaseFixture.exampleFeed.secret.identity)
             XCTAssertEqual(msgs[0].value.author, testFeeds[1])
             XCTAssertEqual(msgs[0].value.content.post?.text, "hey [@privateUser](@MhOkMP3jDCgubbSVl5cVrZiPI3QodCNXhOnsPAzdSwE=.ed25519)! how is it going? (mentions test)")
-            XCTAssertEqual(msgs[0].value.content.post?.mentions?.count,1)
+            XCTAssertEqual(msgs[0].value.content.post?.mentions?.count, 1)
         } catch {
             XCTFail("\(error)")
         }
@@ -568,24 +563,23 @@ class ViewDatabaseTests: XCTestCase {
             XCTFail("\(error)")
         }
     }
-    
+
     /// Verifies that `testLargestSeqFromReceiveLog()` excludes posts published by the current user.
     func testLargestSeqFromReceiveLog() throws {
         // Arrange
         let testMessage = KeyValueFixtures.keyValue(author: fixture.owner)
         let largestSeqInDbAtStart: Int64 = 80
-        
+
         // Assert
         XCTAssertEqual(try vdb.largestSeqFromReceiveLog(), largestSeqInDbAtStart)
-        
+
         // Rearrange
         try vdb.fillMessages(msgs: [testMessage])
-        
+
         // Reassert
         XCTAssertEqual(try vdb.largestSeqFromReceiveLog(), testMessage.receivedSeq)
-
     }
-    
+
     /// Verifies that `largestSeqNotFromPublishedLog()` excludes posts published by the current user.
     func testLargestSeqNotFromPublishedLog() throws {
         // Arrange
@@ -594,52 +588,52 @@ class ViewDatabaseTests: XCTestCase {
 
         // Assert
         XCTAssertEqual(try vdb.largestSeqNotFromPublishedLog(), largestSeqInDbAtStart)
-        
+
         // Rearrange
         try vdb.fillMessages(msgs: [testMessage])
-        
+
         // Reassert
         XCTAssertEqual(try vdb.largestSeqNotFromPublishedLog(), largestSeqInDbAtStart)
     }
-    
+
     /// Verifies that `largestSeqFromPublishedLog()` only looks at posts published by the current user.
     func testLargestSeqFromPublishedLog() throws {
         // Arrange
         let testMessage = KeyValueFixtures.keyValue(author: fixture.owner)
         let largestPublishedSeqInDbAtStart: Int64 = 77
-        
+
         // Assert
         XCTAssertEqual(try vdb.largestSeqFromPublishedLog(), largestPublishedSeqInDbAtStart)
-        
+
         // Rearrange
         try vdb.fillMessages(msgs: [testMessage])
-        
+
         // Reassert
         XCTAssertEqual(try vdb.largestSeqFromPublishedLog(), testMessage.receivedSeq)
     }
-    
+
     /// Verify that fillMessages deduplicates records.
     func testFillMessagesGivenDuplicateInsert() throws {
         // Arrange
         let messageCount = try vdb.messageCount()
         let testMessage = KeyValueFixtures.keyValueWithReceivedSeq
-        
+
         // Act
         try vdb.fillMessages(msgs: [testMessage, testMessage])
         try vdb.fillMessages(msgs: [testMessage])
-        
+
         // Assert
         XCTAssertEqual(try vdb.messageCount(), messageCount + 1)
     }
-    
+
     func testGetAboutForIDGivenUserID() throws {
         // Arrange
         let id = try XCTUnwrap(fixture.identities.first) // userOne
         let expectedAbout = About(about: id, name: "userOne", description: nil, imageLink: nil, publicWebHosting: nil)
-        
+
         // Act
         let about = try vdb.getAbout(for: id)
-        
+
         // Assert
         XCTAssertEqual(about?.identity, expectedAbout.identity)
         XCTAssertEqual(about?.name, expectedAbout.name)
@@ -649,8 +643,8 @@ class ViewDatabaseTests: XCTestCase {
 }
 
 class ViewDatabasePreloadTest: XCTestCase {
-    
-    var tmpURL :URL = URL(string: "unset")!
+
+    var tmpURL = URL(string: "unset")!
     var vdb = ViewDatabase()
     let preloadExpMsgCount = 5
     let expMsgCount = 81
@@ -661,7 +655,7 @@ class ViewDatabasePreloadTest: XCTestCase {
 
         do {
             self.vdb.close()
-            
+
             // get random location for the new db
             self.tmpURL = NSURL.fileURL(withPathComponents: [NSTemporaryDirectory(), "viewDBtest-feedFillPreload"])!
 
@@ -670,30 +664,29 @@ class ViewDatabasePreloadTest: XCTestCase {
             } catch {
                 // ignore - most likely not exists
             }
-           
+
             try FileManager.default.createDirectory(at: self.tmpURL, withIntermediateDirectories: true)
-            
+
             // open DB
             let  damnPath = self.tmpURL.absoluteString.replacingOccurrences(of: "file://", with: "")
-            try self.vdb.open(path: damnPath, user: testFeeds[4], maxAge: -60*60*24*30*48) // 48 month (so roughtly until 2023)
-            
+            try self.vdb.open(path: damnPath, user: testFeeds[4], maxAge: -60 * 60 * 24 * 30 * 48) // 48 month (so roughtly until 2023)
+
             // get test messages from JSON
             let msgs = try JSONDecoder().decode([KeyValue].self, from: preloadData)
             XCTAssertNotNil(msgs)
             XCTAssertEqual(msgs.count, preloadExpMsgCount)
-            
+
             // put them all in
             try vdb.fillMessages(msgs: msgs)
-            
         } catch {
             XCTFail("\(error)")
         }
     }
-    
+
     override func tearDown() {
         vdb.close()
     }
-    
+
     func test01_stats() {
         do {
             // find them all
@@ -708,23 +701,23 @@ class ViewDatabasePreloadTest: XCTestCase {
             XCTFail("\(error)")
         }
     }
-    
+
     func test02_load() {
         let data = self.data(for: "Feed_example.json")
-        
+
         do {
             // get test messages from JSON
             let msgs = try JSONDecoder().decode([KeyValue].self, from: data)
             XCTAssertNotNil(msgs)
             // +1 to fake-cause the duplication bug
-            XCTAssertEqual(msgs.count, expMsgCount+1)
-            
+            XCTAssertEqual(msgs.count, expMsgCount + 1)
+
             // put them all in
             try vdb.fillMessages(msgs: msgs)
-            
+
             // find them all
             let stats = try self.vdb.stats()
-            XCTAssertEqual(stats[.messages], expMsgCount-8) // 8 tag messages from old test data (TODO better test data creation)
+            XCTAssertEqual(stats[.messages], expMsgCount - 8) // 8 tag messages from old test data (TODO better test data creation)
             XCTAssertEqual(stats[.authors], 6)
             XCTAssertEqual(stats[.abouts], 6)
             XCTAssertEqual(stats[.abouts], stats[.authors]) // authors with missing abouts will not be shown
@@ -735,7 +728,7 @@ class ViewDatabasePreloadTest: XCTestCase {
             XCTFail("\(error)")
         }
     }
-    
+
     /// Loads up the preloaded feeds from Preload.bundle and verifies that we can parse them into [KeyValue] and that
     /// they are not empty.
     func testPreloadedFeedsAreParseable() throws {

@@ -30,9 +30,9 @@ typealias StatisticsCompletion = ((BotStatistics) -> Void)
 
 enum RefreshLoad: Int, CaseIterable {
     case tiny = 500 // about 1 second on modern hardware
-    case short = 15000 // about 10 seconds
-    case medium = 45000 // about 30 seconds
-    case long = 100000 // about 60 seconds
+    case short = 15_000 // about 10 seconds
+    case medium = 45_000 // about 30 seconds
+    case long = 100_000 // about 60 seconds
 }
 
 /// Abstract interface to any SSB bot implementation.
@@ -46,10 +46,10 @@ protocol Bot {
     // MARK: AppLifecycle
     func suspend()
     func exit()
-    
+
     // MARK: Logs
     var logFileUrls: [URL] { get }
-    
+
     // MARK: Identity
 
     var identity: Identity? { get }
@@ -58,14 +58,14 @@ protocol Bot {
     func createSecret(completion: SecretCompletion)
 
     // MARK: Sync
-    
+
     // Ensure that these list of addresses are taken into consideration when establishing connections
     func seedPubAddresses(addresses: [PubAddress],
                           queue: DispatchQueue,
                           completion: @escaping (Result<Void, Error>) -> Void)
-    
+
     func knownPubs(completion: @escaping KnownPubsCompletion)
-    
+
     func pubs(queue: DispatchQueue, completion: @escaping (([Pub], Error?) -> Void))
 
     // Sync is the bot reaching out to remote peers and gathering the latest
@@ -127,10 +127,10 @@ protocol Bot {
 
     func follows(identity: Identity, completion:  @escaping ContactsCompletion)
     func followedBy(identity: Identity, completion:  @escaping ContactsCompletion)
-    
+
     func followers(identity: Identity, queue: DispatchQueue, completion: @escaping AboutsCompletion)
     func followings(identity: Identity, queue: DispatchQueue, completion: @escaping AboutsCompletion)
-    
+
     func friends(identity: Identity, completion:  @escaping ContactsCompletion)
 
     // TODO the func names should be swapped
@@ -146,22 +146,22 @@ protocol Bot {
 
     func hashtags(completion: @escaping HashtagsCompletion)
     func posts(with hashtag: Hashtag, completion: @escaping PaginatedCompletion)
-    
+
     // MARK: Feed
-    
+
     // everyone's posts
     func everyone(completion: @escaping PaginatedCompletion)
     func keyAtEveryoneTop(queue: DispatchQueue, completion: @escaping (MessageIdentifier?) -> Void)
-    
+
     // your feed
     func recent(completion: @escaping PaginatedCompletion)
     func keyAtRecentTop(queue: DispatchQueue, completion: @escaping (MessageIdentifier?) -> Void)
-    
+
     /// Returns all the messages created by the specified Identity.
     /// This is useful for showing all the posts from a particular
     /// person, like in an About screen.
     func feed(identity: Identity, completion: @escaping PaginatedCompletion)
-    
+
     /// Returns the thread of messages related to the specified message.  The root
     /// of the thread will be returned if it is not the specified message.
     func thread(keyValue: KeyValue, completion: @escaping ThreadCompletion)
@@ -188,7 +188,7 @@ protocol Bot {
 
     func data(for identifier: BlobIdentifier,
               completion: @escaping ((BlobIdentifier, Data?, Error?) -> Void))
-    
+
     /// Saves a file to disk in the same path it would be if fetched through the net.
     /// Useful for storing a blob fetched from an external source.
     func store(url: URL, for identifier: BlobIdentifier, completion: @escaping BlobsStoreCompletion)
@@ -197,20 +197,19 @@ protocol Bot {
     // MARK: Statistics
 
     func statistics(queue: DispatchQueue, completion: @escaping StatisticsCompletion)
-    
+
     func lastReceivedTimestam() throws -> Double
-    
+
     @available(*, deprecated)
     var statistics: BotStatistics { get }
-    
+
     // MARK: Preloading
-    
+
     func preloadFeed(at url: URL, completion: @escaping ErrorCompletion)
-    
 }
 
 extension Bot {
-    
+
     func login(network: NetworkKey, hmacKey: HMACKey?, secret: Secret, completion: @escaping ErrorCompletion) {
         self.login(queue: .main,
                    network: network,
@@ -221,7 +220,7 @@ extension Bot {
     func sync(peers: [Peer], completion: @escaping SyncCompletion) {
         self.sync(queue: .main, peers: peers, completion: completion)
     }
-    
+
     func abouts(completion:  @escaping AboutsCompletion) {
         self.abouts(queue: .main, completion: completion)
     }
@@ -237,37 +236,36 @@ extension Bot {
     func statistics(completion: @escaping StatisticsCompletion) {
         self.statistics(queue: .main, completion: completion)
     }
-    
+
     func reports(completion: @escaping (([Report], Error?) -> Void)) {
         self.reports(queue: .main, completion: completion)
     }
-    
+
     func about(identity: Identity, completion:  @escaping AboutCompletion) {
         self.about(queue: .main, identity: identity, completion: completion)
     }
-    
+
     func redeemInvitation(to star: Star, completion: @escaping ErrorCompletion) {
         self.redeemInvitation(to: star, completionQueue: .main, completion: completion)
     }
-    
+
     func pubs(completion: @escaping (([Pub], Error?) -> Void)) {
         self.pubs(queue: .main, completion: completion)
     }
-    
+
     func publish(content: ContentCodable, completion: @escaping PublishCompletion) {
         self.publish(content: content, completionQueue: .main, completion: completion)
     }
-    
+
     func keyAtRecentTop(completion: @escaping (MessageIdentifier?) -> Void) {
         self.keyAtRecentTop(queue: .main, completion: completion)
     }
-    
+
     func keyAtEveryoneTop(completion: @escaping (MessageIdentifier?) -> Void) {
         self.keyAtEveryoneTop(queue: .main, completion: completion)
     }
-    
+
     func seedPubAddresses(addresses: [PubAddress], completion: @escaping (Result<Void, Error>) -> Void) {
         self.seedPubAddresses(addresses: addresses, queue: .main, completion: completion)
     }
-    
 }

@@ -17,14 +17,14 @@ class PillButton: AppButton {
             self.heightConstraint?.constant = self.height
         }
     }
-    
+
     private var primaryColor: UIColor
     private var secondaryColor: UIColor
 
     init(primaryColor: UIColor = .primaryAction, secondaryColor: UIColor = .secondaryAction) {
         self.primaryColor = primaryColor
         self.secondaryColor = secondaryColor
-        
+
         super.init()
 
         self.useAutoLayout()
@@ -36,7 +36,7 @@ class PillButton: AppButton {
 
         self.setBackgroundImage(UIColor.clear.image(), for: .normal)
         self.setBackgroundImage(primaryColor.image(), for: .selected)
-        
+
         self.layer.borderWidth = 1.5
 
         self.constrainHeight(to: self.height)
@@ -47,7 +47,7 @@ class PillButton: AppButton {
 
         self.adjustsImageWhenHighlighted = false
     }
-    
+
     override func draw(_ rect: CGRect) {
         super.draw(rect)
         if isSelected {

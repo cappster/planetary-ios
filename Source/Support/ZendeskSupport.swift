@@ -7,16 +7,16 @@
 //
 
 import Foundation
-import ZendeskCoreSDK
-import SupportSDK
 import Logger
 import Secrets
+import SupportSDK
+import ZendeskCoreSDK
 
 class ZendeskSupport: SupportService {
-    
+
     private let zendeskURL = "https://planetarysupport.zendesk.com"
     private let tags = [Bundle.current.versionAndBuild, UIDevice.current.model, UIDevice.current.systemName, UIDevice.current.systemVersion]
-    
+
     init() {
         Log.info("Configuring Zendesk...")
         let keys = Keys.shared
@@ -30,11 +30,11 @@ class ZendeskSupport: SupportService {
         Zendesk.instance?.setIdentity(ZendeskCoreSDK.Identity.createAnonymous())
         Theme.currentTheme.primaryColor = UIColor.tint.default
     }
-    
+
     func mainViewController() -> UIViewController? {
-        return ZDKHelpCenterUi.buildHelpCenterOverviewUi()
+        ZDKHelpCenterUi.buildHelpCenterOverviewUi()
     }
-    
+
     func articleViewController(_ article: SupportArticle) -> UIViewController? {
         let config = HelpCenterUiConfiguration()
         config.showContactOptions = false
@@ -42,7 +42,7 @@ class ZendeskSupport: SupportService {
         return ZDKHelpCenterUi.buildHelpCenterArticleUi(withArticleId: id(for: article),
                                                         andConfigs: [config])
     }
-    
+
     func myTicketsViewController(from reporter: Identity?) -> UIViewController? {
         let reporter = reporter ?? Identity.notLoggedIn
         let config = RequestUiConfiguration()
@@ -57,11 +57,11 @@ class ZendeskSupport: SupportService {
         config.fileAttachments = attachments
         return RequestUi.buildRequestList(with: [config])
     }
-    
+
     func newTicketViewController() -> UIViewController? {
-        return _newTicketViewController()
+        _newTicketViewController()
     }
-    
+
     func newTicketViewController(from reporter: Identity, reporting identity: Identity, name: String) -> UIViewController? {
         let attachment = RequestAttachment(filename: name,
                                            data: identity.utf8data(),
@@ -71,7 +71,7 @@ class ZendeskSupport: SupportService {
                                         attachments: [attachment],
                                         tags: [reporter])
     }
-    
+
     func newTicketViewController(from reporter: Identity, reporting content: KeyValue, reason: SupportReason, view: UIView?) -> UIViewController? {
         // note that attachment order is important and it is
         // preferred that people see the screenshot first
@@ -83,7 +83,7 @@ class ZendeskSupport: SupportService {
                                              attachments: attachments,
                                              tags: [reason.rawValue])
     }
-    
+
     func id(for article: SupportArticle) -> String {
         switch article {
         case .whatIsPlanetary:
@@ -98,7 +98,7 @@ class ZendeskSupport: SupportService {
             return ids.termsOfService
         }
     }
-    
+
     func article(for id: String) -> SupportArticle? {
         switch id {
         case ids.whatIsPlanetary:
@@ -115,7 +115,6 @@ class ZendeskSupport: SupportService {
             return nil
         }
     }
-
 }
 
 typealias RequestAttachments = [RequestAttachment]
@@ -134,7 +133,7 @@ fileprivate extension String {
     /// since strings are internally represented as UTF8 or UTF16, a force unwrap is safe.
     /// https://www.objc.io/blog/2018/02/13/string-to-data-and-back/
     func utf8data() -> Data {
-        return self.data(using: .utf8)!
+        self.data(using: .utf8)!
     }
 }
 
@@ -148,11 +147,10 @@ fileprivate extension KeyValue {
     }
 }
 
-
 fileprivate extension About {
 
     func requestAttachment() -> RequestAttachment {
-        return RequestAttachment(filename: self.nameOrIdentity,
+        RequestAttachment(filename: self.nameOrIdentity,
                                  data: self.identity.utf8data(),
                                  fileType: .plain)
     }
@@ -161,7 +159,7 @@ fileprivate extension About {
 fileprivate extension Identifier {
 
     func requestAttachment() -> RequestAttachment {
-        return RequestAttachment(filename: "content-identifier",
+        RequestAttachment(filename: "content-identifier",
                                  data: self.utf8data(),
                                  fileType: .plain)
     }
@@ -178,13 +176,13 @@ fileprivate extension UIView {
 }
 
 extension ZendeskSupport {
-    
+
     enum SupportSubject: String {
         case bugReport = "Bug Report"
         case contentReport = "Content Report"
         case userReport = "User Report"
     }
-    
+
     private func _newTicketViewController(from reporter: Identity? = nil,
                                           subject: SupportSubject = .bugReport,
                                           attachments: [RequestAttachment] = [],
@@ -205,7 +203,7 @@ extension ZendeskSupport {
     }
 }
 
-fileprivate struct SupportArticleID {
+private struct SupportArticleID {
     let faq = "360039199393"
     let privacyPolicy = "360036147293"
     let termsOfService = "360035642794"
@@ -213,4 +211,4 @@ fileprivate struct SupportArticleID {
     let editPost = "360039199393"
 }
 
-fileprivate let ids = SupportArticleID()
+private let ids = SupportArticleID()

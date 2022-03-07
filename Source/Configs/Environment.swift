@@ -9,7 +9,7 @@
 import Foundation
 
 enum Environment {
-    
+
     enum DefaultNetwork {
         private enum Keys {
             static let name = "PLDefaultNetworkName"
@@ -17,16 +17,16 @@ enum Environment {
             static let hmac = "PLDefaultNetworkHMAC"
         }
         static let name: String = {
-            return Environment.value(for: Keys.name)
+            Environment.value(for: Keys.name)
         }()
         static let key: String = {
-            return Environment.value(for: Keys.key)
+            Environment.value(for: Keys.key)
         }()
         static let hmac: String? = {
-            return Environment.valueIfPresent(for: Keys.hmac)
+            Environment.valueIfPresent(for: Keys.hmac)
         }()
     }
-    
+
     enum DevelopmentNetwork {
         private enum Keys {
             static let name = "PLDevelopmentNetworkName"
@@ -34,16 +34,16 @@ enum Environment {
             static let hmac = "PLDevelopmentNetworkHMAC"
         }
         static let name: String = {
-            return Environment.value(for: Keys.name)
+            Environment.value(for: Keys.name)
         }()
         static let key: String = {
-            return Environment.value(for: Keys.key)
+            Environment.value(for: Keys.key)
         }()
         static let hmac: String = {
-            return Environment.value(for: Keys.hmac)
+            Environment.value(for: Keys.hmac)
         }()
     }
-    
+
     enum TestingNetwork {
         private enum Keys {
             static let name = "PLTestingNetworkName"
@@ -51,16 +51,16 @@ enum Environment {
             static let hmac = "PLTestingNetworkHMAC"
         }
         static let name: String = {
-            return Environment.value(for: Keys.name)
+            Environment.value(for: Keys.name)
         }()
         static let key: String = {
-            return Environment.value(for: Keys.key)
+            Environment.value(for: Keys.key)
         }()
         static let hmac: String = {
-            return Environment.value(for: Keys.hmac)
+            Environment.value(for: Keys.hmac)
         }()
     }
-    
+
     enum PlanetaryNetwork {
         private enum Keys {
             static let name = "PLPlanetaryNetworkName"
@@ -68,62 +68,61 @@ enum Environment {
             static let hmac = "PLPlanetaryNetworkHMAC"
         }
         static let name: String = {
-            return Environment.value(for: Keys.name)
+            Environment.value(for: Keys.name)
         }()
         static let key: String = {
-            return Environment.value(for: Keys.key)
+            Environment.value(for: Keys.key)
         }()
         static let hmac: String = {
-            return Environment.value(for: Keys.hmac)
+            Environment.value(for: Keys.hmac)
         }()
     }
-    
+
     enum Communities {
         private enum Keys {
             static let communities = "PLCommunities"
         }
         static let stars: [Star] = {
-            return Environment.value(for: Keys.communities).split(separator: " ").map{Star(invite: String($0))}
+            Environment.value(for: Keys.communities).split(separator: " ").map { Star(invite: String($0)) }
         }()
     }
-    
+
     enum Constellation {
         private enum Keys {
             static let constellation = "PLConstellation"
         }
         static let stars: [Star] = {
-            return Environment.value(for: Keys.constellation).split(separator: " ").map{Star(invite: String($0))}
+            Environment.value(for: Keys.constellation).split(separator: " ").map { Star(invite: String($0)) }
         }()
     }
-    
+
     enum PlanetarySystem {
         private enum Keys {
             static let planetarySystem = "PLPlanetarySystem"
         }
         static let planets: [Identity] = {
-            return Environment.value(for: Keys.planetarySystem).split(separator: " ").map { String($0) }
+            Environment.value(for: Keys.planetarySystem).split(separator: " ").map { String($0) }
         }()
     }
-    
+
     private static func value(for key: String) -> String {
         guard let value = Environment.infoDictionary[key] as? String else {
             fatalError("\(key) not set in plist")
         }
         return value
     }
-    
+
     private static func valueIfPresent(for key: String) -> String? {
         if let value = Environment.infoDictionary[key] as? String, !value.isEmpty {
             return value
         }
         return nil
     }
-    
+
     private static let infoDictionary: [String: Any] = {
         guard let dict = Bundle.current.infoDictionary else {
             fatalError("Plist file not found")
         }
         return dict
     }()
-    
 }

@@ -7,18 +7,17 @@
 //
 
 import Foundation
-import UIKit
 import Logger
+import UIKit
 
 extension AppDelegate {
-    
-    
+
     func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
         guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
             let incomingURL = userActivity.webpageURL else {
             return false
         }
-        
+
         Log.info("Incoming URL: \(incomingURL)")
         if let identifier = Identifier.parse(publicLink: incomingURL) {
             Log.info("Identifier = \(identifier)")
@@ -38,8 +37,7 @@ extension AppDelegate {
             AppController.shared.pushChannelViewController(for: hashtag.string)
             return true
         }
-        
+
         return false
     }
 }
-

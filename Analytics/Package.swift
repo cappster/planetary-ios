@@ -12,7 +12,7 @@ let package = Package(
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "Analytics",
-            targets: ["Analytics"]),
+            targets: ["Analytics"])
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -35,6 +35,6 @@ let package = Package(
             name: "AnalyticsTests",
             dependencies: ["Analytics"],
             path: "Tests",
-            resources: [.copy("Samples/Secrets.plist")]),
+            resources: [.copy("Samples/Secrets.plist")])
     ]
 )

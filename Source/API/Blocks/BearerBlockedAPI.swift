@@ -33,31 +33,30 @@ class PlanetaryBearerBlockedAPI: BlockedAPIService {
     func retreiveBlockedList(completion: @escaping BlockedListCompletion) {
         let complete: APICompletion = {
             data, error in
-            guard error == nil else { completion([], error); return}
-            
+            guard error == nil else { completion([], error); return }
+
             completion(data?.hashedIdentifier() ?? [], nil)
         }
 
         guard let token = TokenStore.shared.current() else {
             TokenStore.shared.register(cb: { // TODO: this blocks indefinitly. might want to add a timeout?!
                 token in
-                
+
                 let authHeader = ["X-Planetary-Bearer-Token": token]
                 self.get(path: "/block-list", headers: authHeader, completion: complete)
             })
             return
         }
-        
+
         let authHeader = ["X-Planetary-Bearer-Token": token]
         self.get(path: "/block-list", headers: authHeader, completion: complete)
     }
-
 }
 
 extension PlanetaryBearerBlockedAPI: API {
-    
+
     var headers: APIHeaders {
-        return [:] // just here to implement API...
+        [:] // just here to implement API...
     }
 
     func send(method: APIMethod, path: String, query: [URLQueryItem], body: Data?, headers: APIHeaders?, completion: @escaping APICompletion) {
@@ -69,7 +68,7 @@ extension PlanetaryBearerBlockedAPI: API {
         components.host = self.host
         components.path = "\(self.pathPrefix)\(path)"
         components.port = self.port
-        
+
         guard let url = components.url else { completion(nil, .invalidURL); return }
 
         var request = URLRequest(url: url)
@@ -85,7 +84,7 @@ extension PlanetaryBearerBlockedAPI: API {
     }
 }
 
-// MARK:- Custom decoding
+// MARK: - Custom decoding
 
 fileprivate extension Data {
 

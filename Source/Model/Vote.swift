@@ -18,7 +18,7 @@ struct Vote: Codable {
 }
 
 struct ContentVote: ContentCodable {
-    
+
     enum CodingKeys: String, CodingKey {
         case branch
         case root
@@ -26,17 +26,17 @@ struct ContentVote: ContentCodable {
         case vote
         case type
     }
-    
+
     let type: ContentType
     let vote: Vote
-    
+
     // TODO: share recps in content?
     let recps: [RecipientElement]?
-    
+
     // TODO: share tangeling with Post
     let branch: [Identifier]?
     let root: Identifier?
-    
+
     // parse new msgs
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -45,7 +45,7 @@ struct ContentVote: ContentCodable {
 
         root = try? values.decode(Identifier.self, forKey: .root)
         branch = ContentVote.decodeBranch(from: values)
-        
+
         recps = try? values.decode([RecipientElement].self, forKey: .recps)
     }
 
@@ -60,7 +60,7 @@ struct ContentVote: ContentCodable {
     // create/publish
     init(link: LinkIdentifier, value: Int) {
         self.type = .vote
-        
+
         let exp: String
         if value == 1 {
             exp = "❤️"
@@ -68,17 +68,17 @@ struct ContentVote: ContentCodable {
             exp = "💔"
         }
         self.vote = Vote(link: link, value: value, expression: exp)
-        
+
         self.root = nil
         self.branch = nil
-        
+
         // TODO: constructor for PMs (should maybe also live in Content.init
         self.recps = nil
     }
 
     init(link: LinkIdentifier, value: Int, root: MessageIdentifier, branches: [MessageIdentifier]) {
         self.type = .vote
-        
+
         let exp: String
         if value == 1 {
             exp = "❤️"
@@ -89,15 +89,14 @@ struct ContentVote: ContentCodable {
 
         self.root = root
         self.branch = branches
-        
+
         // TODO: constructor for PMs (should maybe also live in Content.init
         self.recps = nil
     }
-    
-    
+
     init(value: Int, root: MessageIdentifier) {
         self.type = .vote
-        
+
         let exp: String
         if value == 1 {
             exp = "❤️"
@@ -105,13 +104,12 @@ struct ContentVote: ContentCodable {
             exp = "💔"
         }
         self.vote = Vote(link: LinkIdentifier.null, value: value, expression: exp)
-        //self.link = Identity.null
-        
+        // self.link = Identity.null
+
         self.root = root
         self.branch = nil
-        
+
         // TODO: constructor for PMs (should maybe also live in Content.init
         self.recps = nil
     }
-
 }

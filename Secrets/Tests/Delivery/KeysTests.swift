@@ -5,8 +5,8 @@
 //  Created by Martin Dutra on 24/11/21.
 //
 
-import XCTest
 @testable import Secrets
+import XCTest
 
 final class SecretsTests: XCTestCase {
 
@@ -30,5 +30,4 @@ final class SecretsTests: XCTestCase {
         service.value = expectedValue
         XCTAssertEqual(secrets.get(key: .posthog), expectedValue)
     }
-
 }

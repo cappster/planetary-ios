@@ -40,16 +40,14 @@ class ImageView: UIImageView {
 
         // cached image
         if let image = Caches.blobs.image(for: image.identifier) {
-            if animated { self.fade(to: image) }
-            else        { self.image = image }
+            if animated { self.fade(to: image) } else { self.image = image }
             return
         }
 
         // request image
         let uuid = Caches.blobs.image(for: image.identifier) {
             [weak self] _, image in
-            if animated { self?.fade(to: image) }
-            else        { self?.image = image }
+            if animated { self?.fade(to: image) } else { self?.image = image }
         }
 
         // wait for completion

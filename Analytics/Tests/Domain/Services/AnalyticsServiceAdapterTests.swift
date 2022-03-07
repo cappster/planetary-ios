@@ -5,8 +5,8 @@
 //  Created by Martin Dutra on 13/12/21.
 //
 
-import Foundation
 @testable import Analytics
+import Foundation
 import XCTest
 
 class AnalyticsServiceAdapterTests: XCTestCase {
@@ -54,5 +54,4 @@ class AnalyticsServiceAdapterTests: XCTestCase {
         service.track(event: .did, element: .post, name: "test", params: ["param": "value"])
         XCTAssertTrue(apiService.tracked)
     }
-
 }

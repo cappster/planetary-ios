@@ -13,10 +13,10 @@ extension CharacterSet {
 }
 
 extension Identity {
-    
+
     var publicLink: URL? {
         let host = "https://planetary.link/"
-        let msgPath = self.addingPercentEncoding(withAllowedCharacters:.rfc3986Unreserved)!
+        let msgPath = self.addingPercentEncoding(withAllowedCharacters: .rfc3986Unreserved)!
         return URL(string: host + msgPath)
     }
 
@@ -29,13 +29,12 @@ extension Identity {
         if oldIdentifier.isValidIdentifier {
             return oldIdentifier
         }
-        
+
         let identifier = Identifier(publicLink.path)
         if identifier.isValidIdentifier {
             return identifier
         }
-        
+
         return nil
     }
-
 }

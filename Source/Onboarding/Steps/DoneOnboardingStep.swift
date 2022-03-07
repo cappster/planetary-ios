@@ -6,13 +6,13 @@
 //  Copyright © 2019 Verse Communications Inc. All rights reserved.
 //
 
-import Foundation
-import UIKit
-import Logger
 import Analytics
+import Foundation
+import Logger
+import UIKit
 
 class DoneOnboardingStep: OnboardingStep {
-    
+
     private let publicWebHostingToggle: TitledToggle = {
         let view = TitledToggle.forAutoLayout()
         view.titleLabel.text = Text.PublicWebHosting.title.text
@@ -28,19 +28,18 @@ class DoneOnboardingStep: OnboardingStep {
     override func customizeView() {
 
         let insets = UIEdgeInsets(top: 30, left: 0, bottom: -16, right: 0)
-        
+
         Layout.fillSouth(of: self.view.hintLabel, with: self.publicWebHostingToggle, insets: insets)
 
         self.view.hintLabel.text = Text.Onboarding.thanksForTrying.text
 
         self.view.primaryButton.setText(.doneOnboarding)
     }
-    
 
     override func performPrimaryAction(sender button: UIButton) {
         self.data.publicWebHosting = self.publicWebHostingToggle.toggle.isOn
         let data = self.data
-        
+
         // SIMULATE ONBOARDING
         if data.simulated {
             Analytics.shared.trackOnboardingComplete(self.data.analyticsData)
@@ -54,7 +53,7 @@ class DoneOnboardingStep: OnboardingStep {
             self.next()
             return
         }
-        
+
         let startOperation = BlockOperation { [weak self] in
             DispatchQueue.main.async { [weak self] in
                 if let primaryButton = self?.view.primaryButton {
@@ -64,20 +63,20 @@ class DoneOnboardingStep: OnboardingStep {
                 }
             }
         }
-        
+
         let followOperation = BlockOperation {
             let identities = Environment.PlanetarySystem.planets
-            let semaphore = DispatchSemaphore(value: identities.count-1)
+            let semaphore = DispatchSemaphore(value: identities.count - 1)
             for identity in identities {
                 Bots.current.follow(identity) {
-                    contact, error in
+                    _, _ in
                     semaphore.signal()
                 }
             }
             semaphore.wait()
         }
         followOperation.addDependency(startOperation)
-        
+
         let publicWebHostingOperation = BlockOperation {
             guard data.publicWebHosting else {
                 return
@@ -85,7 +84,7 @@ class DoneOnboardingStep: OnboardingStep {
             let semaphore = DispatchSemaphore(value: 0)
             let about = About(about: me, publicWebHosting: true)
             let queue = OperationQueue.current?.underlyingQueue ?? .global(qos: .background)
-            Bots.current.publish(content: about, completionQueue: queue) { (msg, error) in
+            Bots.current.publish(content: about, completionQueue: queue) { (_, error) in
                 Log.optional(error)
                 CrashReporting.shared.reportIfNeeded(error: error)
                 semaphore.signal()
@@ -93,14 +92,14 @@ class DoneOnboardingStep: OnboardingStep {
             semaphore.wait()
         }
         publicWebHostingOperation.addDependency(followOperation)
-        
+
         let bundle = Bundle(path: Bundle.main.path(forResource: "Preload", ofType: "bundle")!)!
         let preloadOperation = LoadBundleOperation(bundle: bundle)
         preloadOperation.addDependency(publicWebHostingOperation)
-        
+
         let refreshOperation = RefreshOperation(refreshLoad: .long)
         refreshOperation.addDependency(preloadOperation)
-        
+
         let completionOperation = BlockOperation { [weak self] in
             DispatchQueue.main.async { [weak self] in
                 self?.view.lookReady()
@@ -109,7 +108,7 @@ class DoneOnboardingStep: OnboardingStep {
             }
         }
         completionOperation.addDependency(refreshOperation)
-        
+
         let operations = [startOperation,
                           followOperation,
                           publicWebHostingOperation,

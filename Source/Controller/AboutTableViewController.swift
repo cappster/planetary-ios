@@ -6,8 +6,8 @@
 //  Copyright © 2020 Verse Communications Inc. All rights reserved.
 //
 
-import UIKit
 import Analytics
+import UIKit
 
 class AboutTableViewController: UITableViewController, UISearchResultsUpdating {
 
@@ -46,9 +46,9 @@ class AboutTableViewController: UITableViewController, UISearchResultsUpdating {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         self.view.backgroundColor = .appBackground
-        
+
         self.removeBackItemText()
 
         self.navigationItem.searchController = self.searchController
@@ -61,7 +61,7 @@ class AboutTableViewController: UITableViewController, UISearchResultsUpdating {
         self.tableView.tableHeaderView = UIView(frame: CGRect(origin: .zero,
                                                               size: CGSize(width: tableView.frame.size.width,
                                                                            height: 10)))
-        
+
         self.tableView.separatorInset = .zero
         self.tableView.separatorColor = UIColor.separator.middle
     }
@@ -78,7 +78,7 @@ class AboutTableViewController: UITableViewController, UISearchResultsUpdating {
             }
         }
     }
-    
+
     func load(completion: @escaping () -> Void) {
         completion()
     }
@@ -93,7 +93,7 @@ class AboutTableViewController: UITableViewController, UISearchResultsUpdating {
     // MARK: - UITableViewDataSource functions
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.filteredAbouts.count
+        self.filteredAbouts.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -121,7 +121,6 @@ class AboutTableViewController: UITableViewController, UISearchResultsUpdating {
         Analytics.shared.trackDidTapSearchbar(searchBarName: "about_table")
         self.filter = searchController.searchBar.text ?? ""
     }
-
 }
 
 // MARK: - UISearchBarDelegate functions
@@ -145,5 +144,4 @@ extension AboutTableViewController: UISearchBarDelegate {
         let timeSinceStart = Date().timeIntervalSince(self.searchEditBeginDate)
         return timeSinceStart > 0.4
     }
-    
 }

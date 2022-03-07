@@ -20,7 +20,7 @@ struct VerseFonts {
     let followCountViewBold = UIFont.systemFont(ofSize: 15, weight: .semibold)
 
     let floatingRefresh = UIFont.systemFont(ofSize: 10, weight: .regular)
-    
+
     let peerCount = UIFont.systemFont(ofSize: 12, weight: .regular)
     let peerCountBold = UIFont.systemFont(ofSize: 12, weight: .semibold)
 
@@ -28,44 +28,41 @@ struct VerseFonts {
     let aboutCellIdentity = UIFont.systemFont(ofSize: 15, weight: .regular)
 
     let pillButton = UIFont.systemFont(ofSize: 14, weight: .medium)
-
 }
 
 struct PostFonts {
-    
-    var body: UIFont = UIFont.systemFont(ofSize: 16, weight: .regular)
-    var heading1: UIFont = UIFont.boldSystemFont(ofSize: 26)
-    var heading2: UIFont = UIFont.boldSystemFont(ofSize: 22)
-    var heading3: UIFont = UIFont.boldSystemFont(ofSize: 18)
-    var code: UIFont = UIFont.systemFont(ofSize: 16, weight: .regular)
-    var listItemPrefix: UIFont = UIFont.monospacedDigitSystemFont(ofSize: 16, weight: .regular)
+
+    var body = UIFont.systemFont(ofSize: 16, weight: .regular)
+    var heading1 = UIFont.boldSystemFont(ofSize: 26)
+    var heading2 = UIFont.boldSystemFont(ofSize: 22)
+    var heading3 = UIFont.boldSystemFont(ofSize: 18)
+    var code = UIFont.systemFont(ofSize: 16, weight: .regular)
+    var listItemPrefix = UIFont.monospacedDigitSystemFont(ofSize: 16, weight: .regular)
 
     init() {
         if #available(iOS 13, *) {
             self.code = UIFont.monospacedSystemFont(ofSize: 16, weight: .regular)
         }
     }
-    
 }
 
 struct SmallPostFonts {
 
-    var header: UIFont = UIFont.systemFont(ofSize: 10, weight: .semibold)
-    
-    var body: UIFont = UIFont.systemFont(ofSize: 14, weight: .regular)
-    var heading1: UIFont = UIFont.systemFont(ofSize: 14, weight: .heavy)
-    var heading2: UIFont = UIFont.systemFont(ofSize: 14, weight: .bold)
-    var heading3: UIFont = UIFont.systemFont(ofSize: 14, weight: .semibold)
-    var bigHeading: UIFont = UIFont.systemFont(ofSize: 14, weight: .semibold)
-    var code: UIFont = UIFont.systemFont(ofSize: 14, weight: .regular)
-    var listItemPrefix: UIFont = UIFont.monospacedDigitSystemFont(ofSize: 14, weight: .regular)
+    var header = UIFont.systemFont(ofSize: 10, weight: .semibold)
+
+    var body = UIFont.systemFont(ofSize: 14, weight: .regular)
+    var heading1 = UIFont.systemFont(ofSize: 14, weight: .heavy)
+    var heading2 = UIFont.systemFont(ofSize: 14, weight: .bold)
+    var heading3 = UIFont.systemFont(ofSize: 14, weight: .semibold)
+    var bigHeading = UIFont.systemFont(ofSize: 14, weight: .semibold)
+    var code = UIFont.systemFont(ofSize: 14, weight: .regular)
+    var listItemPrefix = UIFont.monospacedDigitSystemFont(ofSize: 14, weight: .regular)
 
     init() {
         if #available(iOS 13, *) {
             self.code = UIFont.monospacedSystemFont(ofSize: 12, weight: .regular)
         }
     }
-
 }
 
 extension UIFont {
@@ -73,7 +70,7 @@ extension UIFont {
     static let verse = VerseFonts()
     static let post = PostFonts()
     static let smallPost = SmallPostFonts()
-    
+
     static func paragraphStyleAttribute(lineSpacing: CGFloat) -> [NSAttributedString.Key: Any] {
         let style = NSMutableParagraphStyle()
         style.lineSpacing = lineSpacing

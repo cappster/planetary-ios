@@ -11,22 +11,22 @@ import Network
 
 struct Star {
     let invite: String
-    
+
     private(set) var feed: Identifier
     private(set) var host: String
     private(set) var port: UInt
-    
+
     var tcpAddress: String {
-        return "\(host):\(port)"
+        "\(host):\(port)"
     }
-    
+
     var address: PubAddress {
-        return PubAddress(key: self.feed, host: self.host, port: self.port)
+        PubAddress(key: self.feed, host: self.host, port: self.port)
     }
-    
+
     init(invite: String) {
         self.invite = invite
-        
+
         // Parse Feed Identity and TCP Addreess out of the invite
         let range = NSRange(location: 0, length: invite.utf16.count)
         guard let regex = try? NSRegularExpression(pattern: "(.*):([0-9]*):(.*)~.*") else {
@@ -35,7 +35,7 @@ struct Star {
             self.feed = Identifier.null
             return
         }
-        
+
         let match = regex.firstMatch(in: invite, options: [], range: range)!
         let hostRange = Range(match.range(at: 1), in: invite)!
         self.host = String(invite[hostRange])
@@ -44,7 +44,7 @@ struct Star {
         let feedRange = Range(match.range(at: 3), in: invite)!
         self.feed = String(invite[feedRange])
     }
-    
+
     static func isValid(invite: String) -> Bool {
         let range = NSRange(location: 0, length: invite.utf16.count)
         guard let regex = try? NSRegularExpression(pattern: "(.*):([0-9]*):(.*)~.*") else {
@@ -52,15 +52,15 @@ struct Star {
         }
         return regex.numberOfMatches(in: invite, options: [], range: range) > 0
     }
-    
+
     func toPeer() -> Peer {
-        return Peer(tcpAddr: self.tcpAddress, pubKey: self.feed)
+        Peer(tcpAddr: self.tcpAddress, pubKey: self.feed)
     }
-    
+
     func toPub() -> Pub {
-        return Pub(type: .pub, address: self.address)
+        Pub(type: .pub, address: self.address)
     }
-    
+
     /// Checks whether we can establish a TCP connection to the star. This is only necessary to work around a bug
     /// in go-ssb and can probably go away after #301 is solved.
     func testConnection(completion: @escaping (Bool) -> Void) {
@@ -68,7 +68,7 @@ struct Star {
             completion(false)
             return
         }
-        
+
         let tcpConnection = NWConnection(host: NWEndpoint.Host(host), port: port, using: NWParameters.tcp)
         tcpConnection.stateUpdateHandler = { state in
             print(state)
@@ -91,9 +91,8 @@ struct Star {
 }
 
 extension Star: Hashable {
-    
+
     func hash(into hasher: inout Hasher) {
         self.feed.hash(into: &hasher)
     }
-    
 }

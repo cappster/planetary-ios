@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import UIKit
 import Logger
+import UIKit
 
 class JoinOnboardingStep: OnboardingStep {
 
@@ -24,7 +24,7 @@ class JoinOnboardingStep: OnboardingStep {
 
         // TODO if this fails they get stuck
         guard let birthdate = self.data.birthdate else { return }
-        //guard let phone = self.data.phone else { return }
+        // guard let phone = self.data.phone else { return }
         let phone = "800-555-1212"
         guard let name = self.data.name else { return }
 
@@ -34,23 +34,23 @@ class JoinOnboardingStep: OnboardingStep {
         if self.data.simulated {
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                 self.view.lookReady()
-                self.next();
+                self.next()
             }
             return
         }
 
         Onboarding.start(birthdate: birthdate, phone: phone, name: name) { [weak self] context, error in
-            
+
             Log.optional(error)
             CrashReporting.shared.reportIfNeeded(error: error)
-            
+
             self?.view.lookReady()
             guard let context = context else {
                 self?.alert(error: error)
                 return
             }
             self?.data.context = context
-            
+
             self?.next()
         }
     }
@@ -60,18 +60,16 @@ class JoinOnboardingStep: OnboardingStep {
         // this will try Onboarding.start() again, creating a new
         // configuration and such
         let tryAgain = UIAlertAction(title: Text.tryAgain.text,
-                                     style: .default)
-        {
-            [weak self] action in
+                                     style: .default) {
+            [weak self] _ in
             self?.tryAgain()
         }
 
         // this will delete the current configuration (if it matches the
         // context's identity) and start at the beginning of onboarding
         let startOver = UIAlertAction(title: Text.Onboarding.startOver.text,
-                                      style: .destructive)
-        {
-            [weak self] action in
+                                      style: .destructive) {
+            [weak self] _ in
             self?.startOver()
         }
 
@@ -85,7 +83,7 @@ class JoinOnboardingStep: OnboardingStep {
     private func tryAgain() {
         guard self.data.simulated == false else { return }
         self.view.lookBusy()
-        Onboarding.reset() {
+        Onboarding.reset {
             [weak self] in
             self?.view.lookReady()
             self?.didStart()
@@ -97,7 +95,7 @@ class JoinOnboardingStep: OnboardingStep {
     private func startOver() {
         guard self.data.simulated == false else { return }
         self.view.lookBusy()
-        Onboarding.reset() {
+        Onboarding.reset {
             [weak self] in
             self?.view.lookReady()
             AppController.shared.launch()

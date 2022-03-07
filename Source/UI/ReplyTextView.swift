@@ -18,10 +18,10 @@ class ReplyTextView: KeyValueView {
     let topSeparator = Layout.separatorView()
 
     let button = AvatarButton()
-    
+
     var attributedText: NSAttributedString {
         get {
-            return sourceTextView.attributedText
+            sourceTextView.attributedText
         }
 
         set {
@@ -38,7 +38,7 @@ class ReplyTextView: KeyValueView {
 
     var previewActive: Bool {
         get {
-            return renderedTextView.alpha > 0.9
+            renderedTextView.alpha > 0.9
         }
 
         set {
@@ -53,7 +53,7 @@ class ReplyTextView: KeyValueView {
             }
         }
     }
-    
+
     private lazy var sourceTextView: ResizableTextView = {
         let view = ResizableTextView()
         view.configureForPostsAndReplies()
@@ -70,7 +70,7 @@ class ReplyTextView: KeyValueView {
         view.layer.borderColor = UIColor.textInputBorder.cgColor
         return view
     }()
-    
+
     private lazy var renderedTextView: UITextView = {
         let view = UITextView.forPostsAndReplies()
         view.backgroundColor = .cardBackground
@@ -81,7 +81,7 @@ class ReplyTextView: KeyValueView {
     }()
 
     var isEmpty: Bool {
-        return self.sourceTextView.text?.isEmpty ?? true
+        self.sourceTextView.text?.isEmpty ?? true
     }
 
     var textViewHeightConstraint: NSLayoutConstraint?
@@ -104,7 +104,6 @@ class ReplyTextView: KeyValueView {
                               respectSafeArea: false)
         self.button.constrainSize(to: textViewHeight)
 
-
         let left: CGFloat = Layout.horizontalSpacing + textViewHeight + 7
         let insets = UIEdgeInsets(top: topSpacing, left: left, bottom: -bottomSpacing, right: -Layout.horizontalSpacing)
         Layout.fill(view: self, with: self.sourceTextView, insets: insets, respectSafeArea: false)
@@ -113,7 +112,7 @@ class ReplyTextView: KeyValueView {
         self.textViewHeightConstraint = self.sourceTextView.heightAnchor.constraint(lessThanOrEqualToConstant: textViewHeight)
         self.textViewHeightConstraint?.isActive = true
         self.calculateHeight()
-        
+
         addSubview(renderedTextView)
         renderedTextView.topAnchor.constraint(equalTo: sourceTextView.topAnchor,
                                               constant: 0).isActive = true
@@ -123,13 +122,13 @@ class ReplyTextView: KeyValueView {
                                                  constant: 0).isActive = true
         renderedTextView.rightAnchor.constraint(equalTo: sourceTextView.rightAnchor,
                                                 constant: 0).isActive = true
-        
+
         self.button.setImageForMe()
-        
+
         self.button.isSkeletonable = true
         self.sourceTextView.isSkeletonable = true
     }
-    
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         self.sourceTextView.layer.borderColor = UIColor.textInputBorder.cgColor
@@ -137,7 +136,7 @@ class ReplyTextView: KeyValueView {
         self.sourceTextView.setNeedsDisplay()
         self.renderedTextView.setNeedsDisplay()
     }
-    
+
     func calculateHeight() {
         let lineHeight = self.sourceTextView.font?.lineHeight ?? 18
         let sizeToFit = CGSize(width: self.sourceTextView.bounds.width, height: CGFloat.greatestFiniteMagnitude)
@@ -155,24 +154,24 @@ class ReplyTextView: KeyValueView {
 
     @discardableResult
     override func becomeFirstResponder() -> Bool {
-        return self.sourceTextView.becomeFirstResponder()
+        self.sourceTextView.becomeFirstResponder()
     }
-    
+
     @discardableResult
     override func resignFirstResponder() -> Bool {
         self.sourceTextView.resignFirstResponder()
         return super.resignFirstResponder()
     }
-    
+
     override var isUserInteractionEnabled: Bool {
         get {
-            return self.sourceTextView.isUserInteractionEnabled
+            self.sourceTextView.isUserInteractionEnabled
         }
         set {
             self.sourceTextView.isUserInteractionEnabled = newValue
         }
     }
-    
+
     func replaceText(in range: NSRange, with mention: Mention, attributes: [NSAttributedString.Key: Any]? = nil) {
         self.sourceTextView.replaceText(in: range, with: mention, attributes: attributes)
     }
@@ -184,7 +183,7 @@ class ReplyTextView: KeyValueView {
         self.sourceTextView.alpha = 1
         self.calculateHeight()
     }
-    
+
     private func animateToPreview() {
         UIView.animate(withDuration: 0.25, animations: {
             self.sourceTextView.alpha = 0

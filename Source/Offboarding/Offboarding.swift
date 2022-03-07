@@ -6,9 +6,9 @@
 //  Copyright © 2019 Verse Communications Inc. All rights reserved.
 //
 
+import Analytics
 import Foundation
 import Logger
-import Analytics
 
 enum OffboardingError: Error {
     case apiError(Error)
@@ -23,8 +23,7 @@ class Offboarding {
 
     typealias Completion = ((OffboardingError?) -> Void)
 
-    static func offboard(completion: @escaping Completion)
-    {
+    static func offboard(completion: @escaping Completion) {
         guard let identity = Bots.current.identity else { completion(.mustBeLoggedIn); return }
         guard let configuration = AppConfiguration.current else { completion(.invalidConfiguration) ; return }
         guard configuration.identity == identity else { completion(.invalidIdentity); return }
@@ -43,9 +42,9 @@ class Offboarding {
                 error in
                 Log.optional(error)
                 CrashReporting.shared.reportIfNeeded(error: error)
-                
+
                 if let error = error { completion(.botError(error)); return }
-                
+
                 // remove configuration
                 configuration.unapply()
                 AppConfigurations.delete(configuration)
@@ -53,7 +52,7 @@ class Offboarding {
                 // done
                 Analytics.shared.trackOffboardingEnd()
                 Analytics.shared.forget()
-                
+
                 completion(nil)
             }
         }
@@ -61,8 +60,7 @@ class Offboarding {
 
     // TODO move to Bot+Unfollow
     private static func unfollowAllFollowedBy(_ identity: Identity,
-                                              completion: @escaping ((Error?) -> Void))
-    {
+                                              completion: @escaping ((Error?) -> Void)) {
         // identities following this identity
         Bots.current.follows(identity: identity) { (identities: [Identity], error) in
             if let error = error { completion(error); return }

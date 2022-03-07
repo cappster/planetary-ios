@@ -9,7 +9,7 @@
 import XCTest
 
 class UITests: XCTestCase {
-    
+
     // remove previous runs first
     // helps starting with a clean slate from failed runs
     override static func setUp() {
@@ -28,7 +28,7 @@ class UITests: XCTestCase {
             print("failed to drop testdata repo, most likely first run")
         }
     }
-    
+
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
 
@@ -57,21 +57,20 @@ class UITests: XCTestCase {
 
         app.typeText("Martin")
         elementsQuery.buttons["Next"].tap()
-        
+
         // Skip directory step
         let button = app.buttons["Next"]
         let exists = NSPredicate(format: "exists == 1")
         expectation(for: exists, evaluatedWith: button, handler: nil)
         waitForExpectations(timeout: 5, handler: nil)
         button.tap()
-        
-        
+
         // Skip photo step
         elementsQuery.buttons["I'll do it later"].tap()
-        
+
         // Skip bio step
         elementsQuery.buttons["Skip"].tap()
-        
+
         elementsQuery.buttons["Phew! I'm done!"].tap()
 
         let count = elementsQuery.tables["FeedTableView"].children(matching: .cell).count

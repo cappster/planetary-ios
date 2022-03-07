@@ -12,7 +12,7 @@ extension Post {
 
     /// Returns blobs extracted from the post's markdown.
     var inlineBlobs: Blobs {
-        return self.text.blobs()
+        self.text.blobs()
     }
 
     // Returns the serialized blobs or inline blobs, in order.
@@ -22,7 +22,7 @@ extension Post {
     }
 
     var hasBlobs: Bool {
-        return self.anyBlobs.isEmpty == false
+        self.anyBlobs.isEmpty == false
     }
 
     /// Returns a mutated copy of the current post but with
@@ -34,9 +34,9 @@ extension Post {
         if blobs.count > 0 {
             // This is meant as compat with other ssb-clients like Patchwork, etc.
             textWithImages += "\n"
-            for (i,b) in blobs.enumerated() {
+            for (i, b) in blobs.enumerated() {
                 // TODO: captionize!
-                textWithImages += "\n![planetary attachment no.\(i+1)](\(b.identifier))"
+                textWithImages += "\n![planetary attachment no.\(i + 1)](\(b.identifier))"
             }
         }
 

@@ -130,7 +130,6 @@ class AboutCellView: UIView {
         self.imageLoadingTask?.cancel()
         self.imageView.image = UIImage.verse.missingAbout
     }
-
 }
 
 class AboutTableViewCell: UITableViewCell {
@@ -210,7 +209,7 @@ class MiniAboutCellView: UIView {
     func reset() {
         self.update(with: About())
     }
-    
+
     func update(with about: About) {
         self.imageView.set(image: about.image)
         self.nameLabel.text = about.nameOrIdentity

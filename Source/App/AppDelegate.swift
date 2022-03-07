@@ -6,9 +6,9 @@
 //  Copyright © 2018 Verse Communications Inc. All rights reserved.
 //
 
-import UIKit
-import Logger
 import Analytics
+import Logger
+import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,19 +16,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication,
-                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool
-    {
+                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // first
         let window = UIWindow(frame: UIScreen.main.bounds)
         window.rootViewController = AppController.shared
         window.makeKeyAndVisible()
         self.window = window
-        
+
         CrashReporting.shared.record("Launch")
-        
+
         // reset configurations if user enabled switch in settings
         self.resetIfNeeded()
-        
+
         if CommandLine.arguments.contains("use-ci-network") {
             AppConfiguration.current?.unapply()
         }
@@ -43,11 +42,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         AppController.shared.launch()
 
         Analytics.shared.trackAppLaunch()
-        
+
         // Ignore SIGPIPE signals
         // Check https://apple.co/2ZXayG9 for more info.
         Darwin.signal(SIGPIPE, SIG_IGN)
-        
+
         // done
         return true
     }

@@ -12,10 +12,10 @@ import Logger
 class ExitOperation: AsynchronousOperation {
 
     private(set) var error: Error?
-    
+
     override func main() {
         Log.info("ExitOperation started.")
-        
+
         let configuredIdentity = AppConfiguration.current?.identity
         let loggedInIdentity = Bots.current.identity
         guard loggedInIdentity != nil, loggedInIdentity == configuredIdentity else {
@@ -24,11 +24,10 @@ class ExitOperation: AsynchronousOperation {
             self.finish()
             return
         }
-        
+
         Bots.current.exit()
-        
+
         Log.info("ExitOperation finished.")
         self.finish()
     }
-    
 }

@@ -6,15 +6,15 @@
 //  Copyright © 2020 Marcel Kummer. All rights reserved.
 //
 
-import Foundation
 import Down
+import Foundation
 import UIKit
 
 class PostTextEditorView: UIView {
     private let font = UIFont.systemFont(ofSize: 19, weight: .regular)
     private lazy var fontAttribute = [NSAttributedString.Key.font: self.font]
 
-    private let mentionDelegate = MentionTextViewDelegate(font: UIFont.verse.newPost,
+    private weak var mentionDelegate = MentionTextViewDelegate(font: UIFont.verse.newPost,
                                                           color: UIColor.text.default)
 
     private lazy var sourceTextView: UITextView = {
@@ -48,7 +48,7 @@ class PostTextEditorView: UIView {
 
     var attributedText: NSAttributedString {
         get {
-            return sourceTextView.attributedText
+            sourceTextView.attributedText
         }
 
         set {
@@ -58,7 +58,7 @@ class PostTextEditorView: UIView {
 
     var previewActive: Bool {
         get {
-            return renderedTextView.alpha > 0.9
+            renderedTextView.alpha > 0.9
         }
 
         set {
@@ -117,7 +117,7 @@ class PostTextEditorView: UIView {
     }
 
     override func becomeFirstResponder() -> Bool {
-        return sourceTextView.becomeFirstResponder()
+        sourceTextView.becomeFirstResponder()
     }
 
     private func animateToPreview() {

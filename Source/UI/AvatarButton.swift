@@ -12,7 +12,7 @@ import UIKit
 class AvatarButton: ImageButton {
 
     var didUpdateAboutObserver: NSObjectProtocol?
-    
+
     convenience init() {
         self.init(type: .custom)
         self.useAutoLayout()
@@ -25,7 +25,7 @@ class AvatarButton: ImageButton {
         super.layoutSubviews()
         self.round()
     }
-    
+
     deinit {
         removeObservers()
     }
@@ -54,7 +54,7 @@ class AvatarButton: ImageButton {
     func reset() {
         self.setImage(UIImage.verse.missingAbout, for: .normal)
     }
-    
+
     private func removeObservers() {
         if let observer = self.didUpdateAboutObserver {
             NotificationCenter.default.removeObserver(observer)

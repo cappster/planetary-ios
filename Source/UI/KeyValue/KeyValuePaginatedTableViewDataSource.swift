@@ -8,12 +8,11 @@
 
 import UIKit
 
-
 // wild copy pasta from the PostView table datasource
 // this implements prefetching using a proxy
 
 class KeyValuePaginatedTableViewDataSource: NSObject, UITableViewDataSource, UITableViewDataSourcePrefetching {
-    
+
     var data: PaginatedKeyValueDataProxy = StaticDataProxy()
 
     func update(source: PaginatedKeyValueDataProxy) {
@@ -21,11 +20,11 @@ class KeyValuePaginatedTableViewDataSource: NSObject, UITableViewDataSource, UIT
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.data.count
+        self.data.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let latePrefetch = { [weak tableView] (idx: Int, keyValue: KeyValue) -> Void in
+        let latePrefetch = { [weak tableView] (idx: Int, _: KeyValue) -> Void in
             DispatchQueue.main.async { [weak tableView] in
                 let indexPath = IndexPath(item: idx, section: 0)
                 tableView?.reloadRows(at: [indexPath], with: .fade)
@@ -38,7 +37,7 @@ class KeyValuePaginatedTableViewDataSource: NSObject, UITableViewDataSource, UIT
         self.loadKeyValue(keyValue, in: cell)
         return cell
     }
-    
+
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
         if let biggest = indexPaths.max()?.row {
             // prefetch everything up to the last row
@@ -57,14 +56,13 @@ class KeyValuePaginatedTableViewDataSource: NSObject, UITableViewDataSource, UIT
     }
 
     // more copy pasta
-    
+
     /// This is purposefully not public as no subclass should need to override
     /// the resuable cell dequeue process.  If a different type of cell is needed,
     /// override `cell(for: type)` instead.
     private func dequeueReusuableCell(in tableView: UITableView,
                                      at indexPath: IndexPath,
-                                     for keyValue: KeyValue) -> KeyValueTableViewCell
-    {
+                                     for keyValue: KeyValue) -> KeyValueTableViewCell {
         let type = keyValue.value.content.type
         let cell = tableView.dequeueReusableCell(withIdentifier: type.reuseIdentifier) as? KeyValueTableViewCell
         return cell ?? self.cell(at: indexPath, for: type)
@@ -79,17 +77,16 @@ class KeyValuePaginatedTableViewDataSource: NSObject, UITableViewDataSource, UIT
             default:        return KeyValueTableViewCell(for: type)
         }
     }
-    
+
     /// Subclasses are encouraged to override
     /// if a dfferent cell is required for their use case.
     func emptyCell() -> KeyValueTableViewCell {
-        return KeyValueTableViewCell(for: .post)
+        KeyValueTableViewCell(for: .post)
     }
-    
+
     func loadKeyValue(_ keyValue: KeyValue, in cell: KeyValueTableViewCell) {
         cell.update(with: keyValue)
     }
-    
 }
 
 let noop: PrefetchCompletion = { _, _ in }

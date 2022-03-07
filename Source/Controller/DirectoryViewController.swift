@@ -6,9 +6,9 @@
 //  Copyright © 2019 Verse Communications Inc. All rights reserved.
 //
 
-import UIKit
-import Logger
 import Analytics
+import Logger
+import UIKit
 
 class DirectoryViewController: ContentViewController, AboutTableViewDelegate {
 
@@ -49,7 +49,6 @@ class DirectoryViewController: ContentViewController, AboutTableViewDelegate {
         return control
     }()
 
-
     private lazy var searchController: UISearchController = {
         let controller = UISearchController(searchResultsController: nil)
         controller.searchResultsUpdater = self
@@ -75,13 +74,12 @@ class DirectoryViewController: ContentViewController, AboutTableViewDelegate {
         self.definesPresentationContext = true
         self.extendedLayoutIncludesOpaqueBars = false
 
-
-        //AppController.shared.showProgress()
+        // AppController.shared.showProgress()
         self.load {
             AppController.shared.hideProgress()
         }
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         CrashReporting.shared.record("Did Show Directory")
@@ -89,14 +87,13 @@ class DirectoryViewController: ContentViewController, AboutTableViewDelegate {
     }
 
     private func load(completion: @escaping () -> Void) {
-        Bots.current.abouts() {
+        Bots.current.abouts {
             [weak self] abouts, error in
             Log.optional(error)
             CrashReporting.shared.reportIfNeeded(error: error)
             self?.allPeople = abouts
             completion()
         }
-        
     }
 
     func reload() {
@@ -122,7 +119,6 @@ class DirectoryViewController: ContentViewController, AboutTableViewDelegate {
             control.endRefreshing()
         }
     }
-
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -161,13 +157,12 @@ extension DirectoryViewController: TopScrollable {
     }
 }
 
-
 extension DirectoryViewController: UITableViewDataSource {
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        2
     }
-    
+
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 0 {
             return Text.communitites.text
@@ -175,7 +170,7 @@ extension DirectoryViewController: UITableViewDataSource {
             return nil
         }
     }
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
             return Environment.Communities.stars.count
@@ -215,6 +210,5 @@ extension DirectoryViewController: UITableViewDelegate {
             let controller = AboutViewController(with: about)
             self.navigationController?.pushViewController(controller, animated: true)
         }
-        
     }
 }

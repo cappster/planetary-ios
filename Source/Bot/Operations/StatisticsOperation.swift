@@ -6,9 +6,9 @@
 //  Copyright © 2020 Verse Communications Inc. All rights reserved.
 //
 
+import Analytics
 import Foundation
 import Logger
-import Analytics
 
 class StatisticsOperation: AsynchronousOperation {
 
@@ -70,5 +70,4 @@ class StatisticsOperation: AsynchronousOperation {
             self?.finish()
         }
     }
-
 }

@@ -2,7 +2,7 @@ import Multipart
 import UIKit
 import XCTest
 
-//extension Dictionary {
+// extension Dictionary {
 //
 //    // extract uiimage pairs
 //    func splitValues() -> ([String: Any], [String: UIImage]) {
@@ -22,7 +22,7 @@ import XCTest
 //
 //        return (json, images)
 //    }
-//}
+// }
 
 class EncodingTests: XCTestCase {
 
@@ -77,25 +77,23 @@ class EncodingTests: XCTestCase {
      https://spec.scuttlebutt.nz/feed/datamodel.html#signing-encoding-strings
      */
     func test01_jsonpost() {
-        
+
         let texts = [
             "576f756c646e1974206974206265205f6e6963655f0a2e2e2e", // newline and accent
-            "426c65657020626c6f6f702061696ee28099740a0a4e6f2066756e0a0af09f98a9",
+            "426c65657020626c6f6f702061696ee28099740a0a4e6f2066756e0a0af09f98a9"
         ]
-        
+
         let want = [
             "{\"type\":\"post\",\"text\":\"Wouldn\\u0019t it be _nice_\\n...\"}",
-            "{\"type\":\"post\",\"text\":\"Bleep bloop ain’t\\n\\nNo fun\\n\\n😩\"}",
+            "{\"type\":\"post\",\"text\":\"Bleep bloop ain’t\\n\\nNo fun\\n\\n😩\"}"
         ]
-        
-        
-        for (i,text) in texts.enumerated() {
-            
-        
+
+        for (i, text) in texts.enumerated() {
+
             let p = Post(text: stringFromHex(hex: text))
             do {
                 let d = try p.encodeToData()
-                
+
                 let dbg = String(data: d, encoding: .utf8)
                 XCTAssertEqual(dbg!, want[i], "case \(i) failed")
             } catch {
@@ -106,10 +104,10 @@ class EncodingTests: XCTestCase {
     }
 }
 
-fileprivate func stringFromHex(hex: String) -> String {
+private func stringFromHex(hex: String) -> String {
     var hex = hex
     var data = Data()
-    while(hex.count > 0) {
+    while hex.count > 0 {
         let c: String = hex.substring(to: hex.index(hex.startIndex, offsetBy: 2))
         hex = hex.substring(from: hex.index(hex.startIndex, offsetBy: 2))
         var ch: UInt32 = 0

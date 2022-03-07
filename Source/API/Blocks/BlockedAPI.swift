@@ -9,7 +9,7 @@
 import Foundation
 
 struct BlockedAPI {
-    
+
     static var shared: BlockedAPIService = {
         // We don't want to spam the push API when running unit tests
         #if UNIT_TESTS
@@ -22,5 +22,4 @@ struct BlockedAPI {
         }
         #endif
     }()
-    
 }

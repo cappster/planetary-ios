@@ -5,8 +5,8 @@
 //  Created by Martin Dutra on 13/12/21.
 //
 
-import Foundation
 @testable import Analytics
+import Foundation
 
 class APIServiceMock: APIService {
 
@@ -18,7 +18,7 @@ class APIServiceMock: APIService {
     var enabled = true
 
     var isEnabled: Bool {
-        return enabled
+        enabled
     }
 
     func identify(identity: Identity) {
@@ -41,5 +41,4 @@ class APIServiceMock: APIService {
         tracked = true
         lastTrackedEvent = event
     }
-
 }

@@ -8,8 +8,8 @@
 
 import Foundation
 import ImageSlideshow
-import UIKit
 import SkeletonView
+import UIKit
 
 class PostCellView: KeyValueView {
 
@@ -24,7 +24,7 @@ class PostCellView: KeyValueView {
         return seeMore
     }()
 
-    var displayHeader: Bool = true {
+    var displayHeader = true {
         didSet {
             self.headerView.isHidden = !self.displayHeader
             self.textViewTopConstraint.constant = self.textViewTopInset
@@ -50,7 +50,7 @@ class PostCellView: KeyValueView {
     }()
 
     var textViewTopConstraint = NSLayoutConstraint()
-    
+
     /// Activate or deactivate this constraint to make text view have no height (5px actually),
     /// for instance, if the text is empty
     var textViewZeroHeightConstraint = NSLayoutConstraint()
@@ -86,7 +86,7 @@ class PostCellView: KeyValueView {
     }
 
     var shouldTruncate: Bool {
-        return self.truncationLimit != nil
+        self.truncationLimit != nil
     }
 
     var textIsExpanded = false {
@@ -110,8 +110,8 @@ class PostCellView: KeyValueView {
     func configureTruncatedState() {
         self.calculateTruncationDataIfNecessary()
         self.textView.attributedText = self.truncationData?.text ?? self.fullPostText
-        
-        //not so clean but it gest likes displaying.
+
+        // not so clean but it gest likes displaying.
         if self.textView.attributedText.string.isSingleEmoji && self.keyValue?.value.content.type == Planetary.ContentType.vote {
             self.textView.font = UIFont.post.body.withSize(200)
             self.textView.textAlignment = .center
@@ -123,7 +123,7 @@ class PostCellView: KeyValueView {
           } else {
               self.textView.textAlignment = .natural
         }
-        
+
         self.textViewZeroHeightConstraint.isActive = self.textView.attributedText.string.isEmpty
     }
 
@@ -174,7 +174,7 @@ class PostCellView: KeyValueView {
     init() {
         super.init(frame: CGRect.zero)
         self.useAutoLayout()
-        
+
         self.backgroundColor = .cardBackground
 
         Layout.fillTop(of: self, with: self.headerView, insets: .topLeftRight)
@@ -184,7 +184,7 @@ class PostCellView: KeyValueView {
                                          insets: UIEdgeInsets(top: self.textViewTopInset, left: Layout.postSideMargins, bottom: 0, right: -Layout.postSideMargins),
                                          respectSafeArea: false)
         self.textViewTopConstraint = top
-        
+
         self.textViewZeroHeightConstraint = NSLayoutConstraint(item: self.textView,
                                                                attribute: .height,
                                                                relatedBy: .equal,
@@ -203,7 +203,7 @@ class PostCellView: KeyValueView {
         self.galleryViewFullHeightConstraint = self.galleryView.heightAnchor.constraint(equalTo: self.galleryView.widthAnchor)
         self.galleryViewZeroHeightConstraint = self.galleryView.heightAnchor.constraint(equalToConstant: 0)
         self.galleryViewZeroHeightConstraint.isActive = true
-        
+
         self.isSkeletonable = true
     }
 
@@ -212,7 +212,7 @@ class PostCellView: KeyValueView {
         self.init()
         self.update(with: keyValue)
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -230,17 +230,17 @@ class PostCellView: KeyValueView {
             } else {
                 expression = "💔"
             }
-            
+
             self.fullPostText = NSAttributedString(string: expression)
             self.textView.text = expression
             self.configureTruncatedState()
-            
+
             self.galleryViewFullHeightConstraint.isActive = false
             self.galleryViewZeroHeightConstraint.isActive = true
             self.galleryViewBottomConstraint?.constant = 0
         } else if let post = keyValue.value.content.post {
             let text = self.shouldTruncate ? Caches.truncatedText.from(keyValue) : Caches.text.from(keyValue)
-            
+
             self.fullPostText = text
             self.configureTruncatedState()
 
@@ -251,9 +251,6 @@ class PostCellView: KeyValueView {
         } else {
             return
         }
-        
-
-        
 
         // always do this in case of constraint changes
         self.setNeedsLayout()

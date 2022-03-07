@@ -13,22 +13,21 @@ import Foundation
  somebody followed you etc.
  */
 struct Report {
-    
+
     /// Identity that received this report
     var authorIdentity: Identity
-    
+
     /// Identifier of the message that generated this report
     var messageIdentifier: MessageIdentifier
-    
+
     /// Kind of report (follow, like, etc)
     var reportType: ReportType
-    
+
     /// Time of report creation (for sorting purposes)
     var createdAt: Date
-    
+
     /// Message that generated this report
     var keyValue: KeyValue
-    
 }
 
 enum ReportType: String {

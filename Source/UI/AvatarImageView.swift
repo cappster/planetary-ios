@@ -7,15 +7,15 @@
 //
 
 import Foundation
-import UIKit
 import Logger
 import Secrets
+import UIKit
 
 class AvatarImageView: ImageView {
 
     override var image: UIImage? {
         get {
-            return super.image
+            super.image
         }
         set {
             super.image = newValue ?? UIImage.verse.missingAbout
@@ -37,11 +37,10 @@ class AvatarImageView: ImageView {
     // will need to be part of the incoming cache mechanism.
     @discardableResult
     func load(for person: Person, animate: Bool = false) -> URLSessionDataTask? {
-        
-        
-        //TODO: This convert 
-        if (person.image_url == nil && person.image != nil) {
-            
+
+        // TODO: This convert 
+        if person.image_url == nil && person.image != nil {
+
             // cached image
             if let image = Caches.blobs.image(for: person.image!) {
                  DispatchQueue.main.async {
@@ -50,8 +49,8 @@ class AvatarImageView: ImageView {
                     } else {
                         self.image = image
                     }
-                }
-                //return(nil)
+                 }
+                // return(nil)
             }
 
             // request image
@@ -66,19 +65,19 @@ class AvatarImageView: ImageView {
                 return
             }
         }
-        
+
         guard let path = person.image_url, let url = URL(string: path) else { return nil }
-        
+
         var request = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 3)
-        
+
         if let token = Keys.shared.get(key: .blob) {
             request.add(["planetary-blob-authorize": token])
         }
-        
+
         Log.info("url: \(url)")
 
         let task = URLSession.shared.dataTask(with: request) {
-            data, response, error in
+            data, response, _ in
             guard response?.httpStatusCodeError == nil else { return }
             guard let data = data else { return }
             guard let image = UIImage(data: data) else {

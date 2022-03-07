@@ -9,21 +9,20 @@
 import UIKit
 
 class KeyValuePaginatedCollectionViewDataSource: NSObject {
-    
+
     var data: PaginatedKeyValueDataProxy = StaticDataProxy()
-    
+
     func update(source: PaginatedKeyValueDataProxy) {
         self.data = source
     }
-    
 }
 
 extension KeyValuePaginatedCollectionViewDataSource: UICollectionViewDataSource {
-    
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.data.count
+        self.data.count
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Post", for: indexPath) as! PostCollectionViewCell
         let latePrefetch = { (_: Int, keyValue: KeyValue) -> Void in
@@ -38,20 +37,18 @@ extension KeyValuePaginatedCollectionViewDataSource: UICollectionViewDataSource 
         }
         return cell
     }
-    
 }
 
 extension KeyValuePaginatedCollectionViewDataSource: UICollectionViewDataSourcePrefetching {
-    
+
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         if let biggest = indexPaths.max()?.row {
             // prefetch everything up to the last row
             self.data.prefetchUpTo(index: biggest)
         }
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
         // ignore cancels since we cant stop running querys anyhow
     }
-    
 }

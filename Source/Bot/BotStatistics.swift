@@ -3,10 +3,10 @@
 //  Copyright © 2019 Verse Communications Inc. All rights reserved.
 //
 
-import Foundation
 import Analytics
+import Foundation
 
-// MARK:- API statistics
+// MARK: - API statistics
 
 protocol BotStatistics {
 
@@ -19,7 +19,6 @@ protocol BotStatistics {
     var repo: RepoStatistics { get }
     var peer: PeerStatistics { get }
     var db: DatabaseStatistics { get }
-
 }
 
 extension BotStatistics {
@@ -44,7 +43,6 @@ extension BotStatistics {
 
         return statistics
     }
-
 }
 
 struct MutableBotStatistics: BotStatistics {
@@ -97,7 +95,6 @@ struct DatabaseStatistics {
     init(lastReceivedMessage: Int = -2) {
         self.lastReceivedMessage = lastReceivedMessage
     }
-
 }
 
 struct PeerStatistics {
@@ -114,8 +111,7 @@ struct PeerStatistics {
     init(count: Int? = 0,
          connectionCount: UInt? = 0,
          identities: [(String, String)]? = [],
-         open: [(String, String)]? = [])
-    {
+         open: [(String, String)]? = []) {
         self.count = count ?? 0
         self.connectionCount = connectionCount ?? 0
         self.identities = identities ?? []

@@ -6,8 +6,8 @@
 //  Copyright © 2019 Verse Communications Inc. All rights reserved.
 //
 
-import UIKit
 import Analytics
+import UIKit
 
 class EditPostButton: IconButton {
     let post: KeyValue
@@ -20,13 +20,13 @@ class EditPostButton: IconButton {
 
     override func defaultAction() {
         Analytics.shared.trackDidTapButton(buttonName: "options")
-        
+
         let copy = UIAlertAction(title: Text.copyMessageIdentifier.text, style: .default) { [post] _ in
             Analytics.shared.trackDidSelectAction(actionName: "copy_message_identifier")
             UIPasteboard.general.string = post.key
             AppController.shared.showToast(Text.identifierCopied.text)
         }
-        
+
         let share = UIAlertAction(title: Text.shareThisMessage.text, style: .default) { [post] _ in
             guard let publicLink = post.key.publicLink, let me = Bots.current.about else {
                 return
@@ -46,7 +46,7 @@ class EditPostButton: IconButton {
                 popOver.sourceView = self
             }
         }
-        
+
         let delete = UIAlertAction(title: Text.deletePost.text, style: .destructive) { _ in
             Analytics.shared.trackDidSelectAction(actionName: "delete_post")
             guard let controller = Support.shared.articleViewController(.editPost) else {
@@ -75,4 +75,3 @@ class EditPostButton: IconButton {
         fatalError("init(coder:) has not been implemented")
     }
 }
-

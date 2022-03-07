@@ -9,7 +9,7 @@
 import Foundation
 
 struct PhoneVerificationAPI {
-    
+
     static var shared: PhoneVerificationAPIService = {
         // We don't want to spam the push API when running tests
         #if UNIT_TESTS
@@ -22,5 +22,4 @@ struct PhoneVerificationAPI {
         }
         #endif
     }()
-    
 }

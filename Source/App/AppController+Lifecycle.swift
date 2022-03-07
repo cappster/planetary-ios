@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import UIKit
 import Logger
+import UIKit
 
 extension AppController {
 
@@ -17,7 +17,7 @@ extension AppController {
         // it is not sending missions while user onboards or logins. start() is called
         // when showing MainViewController
         self.missionControlCenter.stop()
-        
+
         let controller = LaunchViewController()
         self.setRootViewController(controller, animated: false)
         self.syncPushNotificationsSettings()
@@ -43,7 +43,7 @@ extension AppController {
     }
 }
 
-// MARK:- Memory pressure
+// MARK: - Memory pressure
 
 extension AppController {
 

@@ -11,14 +11,14 @@ import UIKit
 class PeerConnectionAnimation: UIView {
 
     // this was used for easier debugging at a larger size, could be refactored out.
-    var multiplier:      CGFloat = 1.0
+    var multiplier: CGFloat = 1.0
 
-    lazy var lineWidth:       CGFloat = { 1 * self.multiplier }()
+    lazy var lineWidth: CGFloat = { 1 * self.multiplier }()
 
-    lazy var centerDotSize:   CGFloat = { 7 * self.multiplier }()
-    lazy var dotSize:         CGFloat = { 5 * self.multiplier }()
+    lazy var centerDotSize: CGFloat = { 7 * self.multiplier }()
+    lazy var dotSize: CGFloat = { 5 * self.multiplier }()
 
-    lazy var insideDiameter:  CGFloat = { 23 * self.multiplier }()
+    lazy var insideDiameter: CGFloat = { 23 * self.multiplier }()
     lazy var outsideDiameter: CGFloat = { 38 * self.multiplier }()
 
     let insideMax = 11
@@ -30,10 +30,10 @@ class PeerConnectionAnimation: UIView {
     let outsideAnimationSpeed: TimeInterval = 4.1
 
     var totalDiameter: CGFloat {
-        return outsideDiameter + (dotSize / 2)
+        outsideDiameter + (dotSize / 2)
     }
     var totalRadius: CGFloat {
-        return totalDiameter / 2
+        totalDiameter / 2
     }
 
     private var insideDots = 0 {
@@ -61,7 +61,7 @@ class PeerConnectionAnimation: UIView {
 
     init(color: UIColor) {
         super.init(frame: .zero)
-        
+
         self.inColor = color
         self.outColor = color
         self.disabledColor = color
@@ -124,7 +124,6 @@ class PeerConnectionAnimation: UIView {
         replicatorLayer.position = CGPoint(x: self.totalRadius, y: self.totalRadius)
         replicatorLayer.bounds = CGRect(x: 0, y: 0, width: size, height: size)
 
-
         let circle = CALayer()
         circle.frame = CGRect(x: 0, y: 0, width: self.dotSize, height: self.dotSize)
         circle.cornerRadius = self.dotSize / 2
@@ -182,12 +181,11 @@ class PeerConnectionAnimation: UIView {
             self.setDots(replicator: outsideReplicator, circle: outsideCircle, dotCount: self.outsideDots, duration: duration, completion: completion)
         }
     }
-    
+
     func searchAnimation(completion: (() -> Void)? = nil) {
         insideCircle.strokeColor = self.searchColor.cgColor
         outsideCircle.strokeColor = self.searchColor.cgColor
     }
-    
 
     required init?(coder: NSCoder) {
         fatalError("Not implemented.")

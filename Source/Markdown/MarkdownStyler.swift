@@ -6,11 +6,11 @@
 //  Copyright © 2020 Verse Communications Inc. All rights reserved.
 //
 
-import Foundation
 import Down
+import Foundation
 
 class MarkdownStyler: DownStyler {
-    
+
     init(small: Bool = false) {
         var fonts = StaticFontCollection()
         if small {
@@ -28,7 +28,7 @@ class MarkdownStyler: DownStyler {
             fonts.code = UIFont.post.code
             fonts.listItemPrefix = UIFont.post.listItemPrefix
         }
-        
+
         var colors = StaticColorCollection()
         colors.body = UIColor.text.default
         colors.heading1 = UIColor.secondaryText
@@ -40,7 +40,7 @@ class MarkdownStyler: DownStyler {
         colors.quote = UIColor.secondaryText
         colors.quoteStripe = UIColor.secondaryText
         colors.thematicBreak = UIColor.tint.default
-        
+
         var paragraphStyles = StaticParagraphStyleCollection()
         let headingStyle = NSMutableParagraphStyle()
         let bodyStyle = NSMutableParagraphStyle()
@@ -65,13 +65,13 @@ class MarkdownStyler: DownStyler {
             codeStyle.lineSpacing = 1
             codeStyle.paragraphSpacing = 8
         }
-        
+
         paragraphStyles.body = bodyStyle
         paragraphStyles.heading1 = headingStyle
         paragraphStyles.heading2 = headingStyle
         paragraphStyles.heading3 = headingStyle
         paragraphStyles.code = codeStyle
-        
+
         var listItemOptions = ListItemOptions()
         if small {
             listItemOptions.maxPrefixDigits = 1
@@ -97,7 +97,7 @@ class MarkdownStyler: DownStyler {
         var thematicBreakOptions = ThematicBreakOptions()
         thematicBreakOptions.thickness = 1
         thematicBreakOptions.indentation = 0
-        
+
         var codeBlockOptions = CodeBlockOptions()
         if small {
             codeBlockOptions.containerInset = 4
@@ -112,17 +112,16 @@ class MarkdownStyler: DownStyler {
                                                               quoteStripeOptions: quoteStripeOptions,
                                                               thematicBreakOptions: thematicBreakOptions,
                                                               codeBlockOptions: codeBlockOptions)
-        
+
         super.init(configuration: downStylerConfiguration)
     }
-    
+
     override func style(text str: NSMutableAttributedString) {
         super.style(text: str)
         str.addAttributes([.kern: UIFont.post.body.kerning(6)])
     }
-    
+
     func style(seeMore str: NSMutableAttributedString) {
         self.style(text: str)
     }
-    
 }

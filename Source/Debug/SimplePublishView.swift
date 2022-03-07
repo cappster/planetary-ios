@@ -7,11 +7,11 @@
 //
 
 import Foundation
-import UIKit
 import Logger
+import UIKit
 
 class SimplePublishViewController: UIViewController {
-    
+
     private let textView: UITextView = {
         let view = UITextView()
         view.layer.borderColor = UIColor.lightGray.cgColor
@@ -21,7 +21,7 @@ class SimplePublishViewController: UIViewController {
         view.font = UIFont.systemFont(ofSize: 14)
         return view
     }()
-    
+
     private let label: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12)
@@ -31,7 +31,7 @@ class SimplePublishViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
+
     convenience init() {
         self.init(nibName: nil, bundle: nil)
         self.navigationItem.title = "Publish"
@@ -39,7 +39,7 @@ class SimplePublishViewController: UIViewController {
                                                                  target: self,
                                                                  action: #selector(publishButtonTouchUpInside))
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.white
@@ -47,19 +47,19 @@ class SimplePublishViewController: UIViewController {
         self.addConstraints()
         self.update()
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.update()
     }
-    
+
     private func addSubviews() {
         self.view.addSubview(self.textView)
         self.view.addSubview(self.label)
     }
-    
+
     private func addConstraints() {
-        
+
         var view: UIView = self.textView
         NSLayoutConstraint.activate([
             view.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 150),
@@ -67,7 +67,7 @@ class SimplePublishViewController: UIViewController {
             view.heightAnchor.constraint(equalToConstant: 250),
             view.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -16)
         ])
-        
+
         view = self.label
         NSLayoutConstraint.activate([
             view.topAnchor.constraint(equalTo: self.textView.bottomAnchor, constant: 20),
@@ -75,12 +75,12 @@ class SimplePublishViewController: UIViewController {
             view.rightAnchor.constraint(equalTo: self.textView.rightAnchor)
         ])
     }
-    
+
     private func update() {
         self.textView.text = "hello world"
         self.textView.contentOffset = CGPoint.zero
     }
-    
+
     @objc func publishButtonTouchUpInside() {
         guard let t = self.textView.text else {
             self.label.text = "nohting to publish????"
@@ -96,7 +96,7 @@ class SimplePublishViewController: UIViewController {
             DispatchQueue.main.async {
                 self.textView.text = ""
                 self.textView.endEditing(true)
-                
+
                 if let err = error {
                     Log.unexpected(.apiError, "err during publish")
                     Log.optional(err)
@@ -107,6 +107,5 @@ class SimplePublishViewController: UIViewController {
                 self.navigationController?.popViewController(animated: true)
             }
         }
-        
     }
 }

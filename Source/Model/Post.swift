@@ -1,4 +1,3 @@
-
 //  Post.swift
 //  FBTTUnitTests
 //
@@ -15,7 +14,7 @@ class Post: ContentCodable {
         case mentions
         case recps
         case reply
-        case root 
+        case root
         case text
         case type
     }
@@ -38,8 +37,7 @@ class Post: ContentCodable {
     /// Check out NewPostViewController for an example.
     init(attributedText: NSAttributedString,
          root: MessageIdentifier? = nil,
-         branches: [MessageIdentifier]? = nil)
-    {
+         branches: [MessageIdentifier]? = nil) {
         // required
         self.branch = branches
         self.root = root
@@ -48,7 +46,7 @@ class Post: ContentCodable {
 
         var mentionsFromHashtags = attributedText.string.hashtags().map {
             tag in
-            return Mention(link: tag.string)
+            Mention(link: tag.string)
         }
 
         mentionsFromHashtags.append(contentsOf: attributedText.mentions())
@@ -65,14 +63,13 @@ class Post: ContentCodable {
          hashtags: Hashtags? = nil,
          mentions: [Mention]? = nil,
          root: MessageIdentifier? = nil,
-         text: String)
-    {
+         text: String) {
         // required
         self.branch = branches
         self.root = root
         self.text = text
         self.type = .post
-        
+
         var m: Mentions = []
         if let mentions = mentions {
             m = mentions
@@ -119,7 +116,7 @@ class Post: ContentCodable {
 extension Post {
 
     var isRoot: Bool {
-        return self.root == nil
+        self.root == nil
     }
 
     func doesMention(_ identity: Identity?) -> Bool {
@@ -139,7 +136,7 @@ extension Post {
 enum RecipientElement: Codable {
     case namedKey(RecipientNamedKey)
     case string(Identity)
-    
+
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         if let x = try? container.decode(Identity.self) {
@@ -152,7 +149,7 @@ enum RecipientElement: Codable {
         }
         throw DecodingError.typeMismatch(RecipientElement.self, DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Wrong type for RecipientElement"))
     }
-    
+
     func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         switch self {
@@ -167,13 +164,12 @@ enum RecipientElement: Codable {
 struct RecipientNamedKey: Codable {
     let link: Identity
     let name: String
-    
+
     enum CodingKeys: String, CodingKey {
         case name
         case link
     }
 }
-
 
 /* TODO: there is a cleaner solution here
  tried this to get [Identity] but got the following error so I added getRecipientIdentities as a workaround

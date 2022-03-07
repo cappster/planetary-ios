@@ -10,7 +10,7 @@ import XCTest
 
 /// Warning: running these test will delete the database on whatever device they execute on.
 class GoBotIntegrationTests: XCTestCase {
-    
+
     var sut: GoBot!
     var workingDirectory: String!
     let fm = FileManager.default
@@ -55,7 +55,7 @@ class GoBotIntegrationTests: XCTestCase {
         for i in 0..<10 {
             _ = sut.testingPublish(as: "alice", content: Post(text: "Alice \(i)"))
         }
-        
+
         // Act
         let postExpectation = self.expectation(description: "post published")
         let bobPost = Post(
@@ -68,18 +68,17 @@ class GoBotIntegrationTests: XCTestCase {
             postExpectation.fulfill()
         }
         waitForExpectations(timeout: 10, handler: nil)
-        
+
         let refreshExpectation = self.expectation(description: "refresh completed")
         sut.refresh(load: .long, queue: .main) { error, _ in
             XCTAssertNil(error)
             refreshExpectation.fulfill()
         }
         waitForExpectations(timeout: 10, handler: nil)
-        
+
         // Assert
         XCTAssertEqual(sut.statistics.repo.messageCount, 11)
         XCTAssertEqual(sut.statistics.repo.numberOfPublishedMessages, 1)
         XCTAssertEqual(try sut.database.messageCount(), 11)
     }
-    
 }

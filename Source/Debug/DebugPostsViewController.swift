@@ -12,7 +12,7 @@ import UIKit
 class DebugPostsViewController: ContentViewController {
 
     private let dataSource = DebugPostsTableViewDataSource()
-    private lazy var delegate = KeyValueTableViewDelegate(on: self)
+    private lazy weak var delegate = KeyValueTableViewDelegate(on: self)
     private let tableView = UITableView.forVerse()
 
     init() {
@@ -70,12 +70,11 @@ fileprivate extension KeyValue {
     }
 }
 
-fileprivate class DebugPostsTableViewDataSource: KeyValueTableViewDataSource {
+private class DebugPostsTableViewDataSource: KeyValueTableViewDataSource {
 
     override func cell(at indexPath: IndexPath,
                        for type: ContentType,
-                       tableView: UITableView) -> KeyValueTableViewCell
-    {
+                       tableView: UITableView) -> KeyValueTableViewCell {
         let view = PostReplyView()
         let cell = KeyValueTableViewCell(for: .post, with: view)
         return cell

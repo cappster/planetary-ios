@@ -29,7 +29,7 @@ class NetworkKeyTests: XCTestCase {
         // odd number of characters
         var key = NetworkKey(base64: "KHLiKZvvjbY1ziEHMXawbCEIM6qwjCDm3VYRan/")
         XCTAssertNil(key)
-        
+
         // too short (needs to be 32bytes)
         key = NetworkKey(base64: "VmVyc2UgQ29tbXVuaWNhdGlvbnMsIEluYy4=")
         XCTAssertNil(key)

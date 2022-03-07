@@ -34,11 +34,11 @@ class AppConfigurationViewController: DebugTableViewController {
         self.canDeleteConfiguration = false
         self.canEditConfiguration = true
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.load()
@@ -76,8 +76,7 @@ class AppConfigurationViewController: DebugTableViewController {
 
         settings += [DebugTableViewCellModel(title: "",
                                              cellReuseIdentifier: DebugValueTableViewCell.className,
-                                             valueClosure:
-            {
+                                             valueClosure: {
                 [unowned self] cell in
                 Layout.fill(view: cell.contentView, with: self.nameField, insets: .debugTableViewCell)
                 self.nameField.text = self.configuration.name
@@ -89,16 +88,14 @@ class AppConfigurationViewController: DebugTableViewController {
         if self.canDeleteConfiguration {
             settings += [DebugTableViewCellModel(title: "Delete",
                                              cellReuseIdentifier: DebugValueTableViewCell.className,
-                                             valueClosure:
-            {
+                                             valueClosure: {
                 cell in
                 cell.textLabel?.textColor = .red
                 let enabled = AppConfigurations.current.count > 1
                 cell.textLabel?.isEnabled = enabled
                 cell.isUserInteractionEnabled = enabled
             },
-                                             actionClosure:
-            {
+                                             actionClosure: {
                 [unowned self] cell in
                 self.confirm(
                     from: cell,
@@ -121,8 +118,7 @@ class AppConfigurationViewController: DebugTableViewController {
 
         settings += [DebugTableViewCellModel(title: "Status",
                                              cellReuseIdentifier: DebugValueTableViewCell.className,
-                                             valueClosure:
-            {
+                                             valueClosure: {
                 [unowned self] cell in
                 cell.detailTextLabel?.text = Onboarding.status(for: self.configuration.identity!).rawValue
             },
@@ -130,15 +126,14 @@ class AppConfigurationViewController: DebugTableViewController {
 
         return ("Onboarding", settings, nil)
     }
-    
+
     private func statistics() -> DebugTableViewController.Settings {
 
         var settings: [DebugTableViewCellModel] = []
 
         settings += [DebugTableViewCellModel(title: "Published messages",
                                              cellReuseIdentifier: DebugValueTableViewCell.className,
-                                             valueClosure:
-            {
+                                             valueClosure: {
                 [unowned self] cell in
                 cell.detailTextLabel?.text = "\(self.configuration.numberOfPublishedMessages)"
             },
@@ -153,15 +148,13 @@ class AppConfigurationViewController: DebugTableViewController {
 
         settings += [DebugTableViewCellModel(title: "",
                                              cellReuseIdentifier: DebugValueTableViewCell.className,
-                                             valueClosure:
-            {
+                                             valueClosure: {
                 [unowned self] cell in
                 cell.textLabel?.isEnabled = self.canEditConfiguration
                 cell.textLabel?.numberOfLines = 0
                 cell.textLabel?.text = self.configuration.identity
             },
-                                             actionClosure:
-            {
+                                             actionClosure: {
                 cell in
                 UIPasteboard.general.string = cell.textLabel?.text
             }
@@ -169,16 +162,14 @@ class AppConfigurationViewController: DebugTableViewController {
 
         settings += [DebugTableViewCellModel(title: "",
                                              cellReuseIdentifier: DebugValueTableViewCell.className,
-                                             valueClosure:
-            {
+                                             valueClosure: {
                 [unowned self] cell in
                 cell.textLabel?.isEnabled = self.canEditConfiguration
                 cell.textLabel?.numberOfLines = 0
                 guard let secret = self.configuration.secret ?? self.secret else { return }
                 cell.textLabel?.text = secret.jsonStringUnescaped()
             },
-                                             actionClosure:
-            {
+                                             actionClosure: {
                 cell in
                 UIPasteboard.general.string = cell.textLabel?.text
             }
@@ -193,8 +184,7 @@ class AppConfigurationViewController: DebugTableViewController {
 
         settings += [DebugTableViewCellModel(title: "SSB",
                                              cellReuseIdentifier: DebugValueTableViewCell.className,
-                                             valueClosure:
-            {
+                                             valueClosure: {
                 cell in
                 cell.detailTextLabel?.allowsDefaultTighteningForTruncation = false
                 cell.detailTextLabel?.lineBreakMode = .byTruncatingMiddle
@@ -204,9 +194,8 @@ class AppConfigurationViewController: DebugTableViewController {
                 cell.textLabel?.isEnabled = self.canEditConfiguration
                 cell.isUserInteractionEnabled = self.canEditConfiguration
             },
-                                             actionClosure:
-            {
-                [unowned self] cell in
+                                             actionClosure: {
+                [unowned self] _ in
                 self.configuration.network = NetworkKey.ssb
                 self.refresh()
             }
@@ -214,8 +203,7 @@ class AppConfigurationViewController: DebugTableViewController {
 
         settings += [DebugTableViewCellModel(title: "Verse",
                                              cellReuseIdentifier: DebugValueTableViewCell.className,
-                                             valueClosure:
-            {
+                                             valueClosure: {
                 cell in
                 cell.detailTextLabel?.allowsDefaultTighteningForTruncation = false
                 cell.detailTextLabel?.lineBreakMode = .byTruncatingMiddle
@@ -225,9 +213,8 @@ class AppConfigurationViewController: DebugTableViewController {
                 cell.textLabel?.isEnabled = self.canEditConfiguration
                 cell.isUserInteractionEnabled = self.canEditConfiguration
             },
-                                             actionClosure:
-            {
-                [unowned self] cell in
+                                             actionClosure: {
+                [unowned self] _ in
                 self.configuration.network = NetworkKey.verse
                 self.refresh()
             }
@@ -235,8 +222,7 @@ class AppConfigurationViewController: DebugTableViewController {
 
         settings += [DebugTableViewCellModel(title: "Planetary",
                                              cellReuseIdentifier: DebugValueTableViewCell.className,
-                                             valueClosure:
-            {
+                                             valueClosure: {
                 cell in
                 cell.detailTextLabel?.allowsDefaultTighteningForTruncation = false
                 cell.detailTextLabel?.lineBreakMode = .byTruncatingMiddle
@@ -246,14 +232,13 @@ class AppConfigurationViewController: DebugTableViewController {
                 cell.textLabel?.isEnabled = self.canEditConfiguration
                 cell.isUserInteractionEnabled = self.canEditConfiguration
         },
-                                             actionClosure:
-            {
-                [unowned self] cell in
+                                             actionClosure: {
+                [unowned self] _ in
                 self.configuration.network = NetworkKey.planetary
                 self.refresh()
             }
         )]
-        
+
         return ("Networks", settings, nil)
     }
 
@@ -263,8 +248,7 @@ class AppConfigurationViewController: DebugTableViewController {
 
         settings += [DebugTableViewCellModel(title: "Off",
                                              cellReuseIdentifier: DebugValueTableViewCell.className,
-                                             valueClosure:
-            {
+                                             valueClosure: {
                 cell in
                 cell.detailTextLabel?.allowsDefaultTighteningForTruncation = false
                 cell.detailTextLabel?.lineBreakMode = .byTruncatingMiddle
@@ -277,8 +261,7 @@ class AppConfigurationViewController: DebugTableViewController {
 
         settings += [DebugTableViewCellModel(title: "Verse",
                                              cellReuseIdentifier: DebugValueTableViewCell.className,
-                                             valueClosure:
-            {
+                                             valueClosure: {
                 cell in
                 cell.detailTextLabel?.allowsDefaultTighteningForTruncation = false
                 cell.detailTextLabel?.lineBreakMode = .byTruncatingMiddle
@@ -289,11 +272,10 @@ class AppConfigurationViewController: DebugTableViewController {
                 cell.textLabel?.isEnabled = false
         },
                                              actionClosure: nil)]
-        
+
         settings += [DebugTableViewCellModel(title: "Planetary",
                                              cellReuseIdentifier: DebugValueTableViewCell.className,
-                                             valueClosure:
-            {
+                                             valueClosure: {
                 cell in
                 cell.detailTextLabel?.allowsDefaultTighteningForTruncation = false
                 cell.detailTextLabel?.lineBreakMode = .byTruncatingMiddle
@@ -314,17 +296,15 @@ class AppConfigurationViewController: DebugTableViewController {
 
         settings += [DebugTableViewCellModel(title: "FakeBot",
                                              cellReuseIdentifier: DebugValueTableViewCell.className,
-                                             valueClosure:
-            {
+                                             valueClosure: {
                 cell in
                 let selected = self.configuration.bot?.name == "FakeBot"
                 cell.accessoryType = selected ? .checkmark : .none
                 cell.textLabel?.isEnabled = self.canEditConfiguration
                 cell.isUserInteractionEnabled = self.canEditConfiguration
             },
-                                             actionClosure:
-            {
-                [unowned self] cell in
+                                             actionClosure: {
+                [unowned self] _ in
                 self.configuration.bot = Bots.bot(named: "FakeBot")
                 self.refresh()
             }
@@ -332,17 +312,15 @@ class AppConfigurationViewController: DebugTableViewController {
 
         settings += [DebugTableViewCellModel(title: "GoBot",
                                              cellReuseIdentifier: DebugValueTableViewCell.className,
-                                             valueClosure:
-            {
+                                             valueClosure: {
                 cell in
                 let selected = self.configuration.bot?.name == "GoBot"
                 cell.accessoryType = selected ? .checkmark : .none
                 cell.textLabel?.isEnabled = self.canEditConfiguration
                 cell.isUserInteractionEnabled = self.canEditConfiguration
             },
-                                             actionClosure:
-            {
-                [unowned self] cell in
+                                             actionClosure: {
+                [unowned self] _ in
                 self.configuration.bot = Bots.bot(named: "GoBot")
                 self.refresh()
             }

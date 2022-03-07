@@ -6,9 +6,9 @@
 //  Copyright © 2019 Verse Communications Inc. All rights reserved.
 //
 
-import UIKit
-import Logger
 import Analytics
+import Logger
+import UIKit
 
 class RelationshipButton: IconButton {
 
@@ -43,7 +43,7 @@ class RelationshipButton: IconButton {
         Analytics.shared.trackDidTapButton(buttonName: "options")
         self.relationship.load {
             let actionData: [ActionData] = [
-                (.follow,   .default, self.follow),
+                (.follow, .default, self.follow),
                 (.unfollow, .default, self.unfollow),
                 (.copyMessageIdentifier, .default, self.copyMessageIdentifier),
                 (.shareThisMessage, .default, self.shareMessage),
@@ -51,13 +51,13 @@ class RelationshipButton: IconButton {
 //                (.addFriend,    .default,     self.follow),
 //                (.removeFriend, .destructive, self.unfollow),
 
-                (.blockUser,   .destructive, self.blockUser),
+                (.blockUser, .destructive, self.blockUser),
 //                (.unblockUser, .default,     self.unblockUser),
 
                 (.reportPost, .destructive, self.reportPost),
                 (.reportUser, .destructive, self.reportUser),
 
-                (.cancel,     .cancel, {})
+                (.cancel, .cancel, {})
             ]
 
             let actions: [UIAlertAction] = actionData.compactMap {
@@ -97,13 +97,13 @@ class RelationshipButton: IconButton {
 
     func follow() {
         Analytics.shared.trackDidSelectAction(actionName: "follow_identity")
-        
+
         // manually override the image for immediate feedback, assuming success
         // but will be reverted in case of failure
         self.relationship.isFollowing = true
         self.relationship.notifyUpdate()
 
-        Bots.current.follow(self.relationship.other) { (contact, error) in
+        Bots.current.follow(self.relationship.other) { (_, error) in
             Log.optional(error)
             CrashReporting.shared.reportIfNeeded(error: error)
             if error != nil {
@@ -118,13 +118,13 @@ class RelationshipButton: IconButton {
 
     func unfollow() {
         Analytics.shared.trackDidSelectAction(actionName: "unfollow_identity")
-        
+
         // manually override the image for immediate feedback, assuming success
         // but will be reverted in case of failure
         self.relationship.isFollowing = false
         self.relationship.notifyUpdate()
 
-        Bots.current.unfollow(self.relationship.other) { (contact, error) in
+        Bots.current.unfollow(self.relationship.other) { (_, error) in
             Log.optional(error)
             CrashReporting.shared.reportIfNeeded(error: error)
             if error != nil {
@@ -146,13 +146,13 @@ class RelationshipButton: IconButton {
         Analytics.shared.trackDidSelectAction(actionName: "remove_friend")
         AppController.shared.alert(title: "Unimplemented", message: "TODO: Implement remove friend.", cancelTitle: Text.ok.text)
     }
-    
+
     func copyMessageIdentifier() {
         Analytics.shared.trackDidSelectAction(actionName: "copy_message_identifier")
         UIPasteboard.general.string = content.key
         AppController.shared.showToast(Text.identifierCopied.text)
     }
-    
+
     func shareMessage() {
         guard let publicLink = content.key.publicLink else {
             return
@@ -233,9 +233,8 @@ extension SupportReason {
 extension UIAlertAction {
 
     static func cancel() -> UIAlertAction {
-        return UIAlertAction(title: Text.cancel.text,
+        UIAlertAction(title: Text.cancel.text,
                              style: .cancel,
                              handler: nil)
     }
 }
-

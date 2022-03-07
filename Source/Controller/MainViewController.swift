@@ -6,14 +6,14 @@
 //  Copyright © 2019 Verse Communications Inc. All rights reserved.
 //
 
+import Analytics
 import Foundation
 import UIKit
-import Analytics
 
 class MainViewController: UITabBarController {
 
     var homeViewController: HomeViewController? {
-        return self.homeFeatureViewController.viewControllers.first as? HomeViewController
+        self.homeFeatureViewController.viewControllers.first as? HomeViewController
     }
 
     private let homeFeatureViewController = FeatureViewController(rootViewController: HomeViewController(),
@@ -30,9 +30,6 @@ class MainViewController: UITabBarController {
 
     private let everyoneViewController = FeatureViewController(rootViewController: DiscoverViewController(),
                                                                        tabBarItemImageName: "tab-icon-everyone")
-
-    
-    
 
     // custom separator on the top edge of the tab bar
     private var topBorder: UIView?
@@ -52,7 +49,7 @@ class MainViewController: UITabBarController {
                            self.directoryFeatureViewController]
         self.setViewControllers(controllers, animated: false)
     }
-    
+
     func setTopBorder(hidden: Bool, animated: Bool = true) {
         let duration = animated ? 0.3 : 0
         UIView.animate(withDuration: duration) {
@@ -61,7 +58,7 @@ class MainViewController: UITabBarController {
     }
 
     func isNotificationsTabSelected() -> Bool {
-        return self.selectedViewController == self.notificationsFeatureViewController
+        self.selectedViewController == self.notificationsFeatureViewController
     }
 
     /// Changes the image and selected image to indicate whether there are notifications or not.
@@ -94,7 +91,7 @@ class MainViewController: UITabBarController {
         self.updateNotificationsTabIcon(hasNotifications: hasNotifications)
         self.selectedViewController = self.notificationsFeatureViewController
     }
-    
+
     func selectDirectoryTab() {
         self.selectedViewController = self.directoryFeatureViewController
     }
@@ -104,18 +101,17 @@ protocol TopScrollable {
     func scrollToTop()
 }
 
-// MARK:- UITabBarControllerDelegate
+// MARK: - UITabBarControllerDelegate
 
 extension MainViewController: UITabBarControllerDelegate {
 
     func tabBarController(_ tabBarController: UITabBarController,
-                          shouldSelect viewController: UIViewController) -> Bool
-    {
+                          shouldSelect viewController: UIViewController) -> Bool {
         self.clearNotificationsTabIcon(whenSwitchingTo: viewController)
 
         guard let targetIndex = viewControllers?.firstIndex(where: { $0 == viewController }),
               self.selectedIndex == targetIndex else { return true }
-        
+
         switch targetIndex {
         case 0:
             Analytics.shared.trackDidTapTab(tabName: "home")
@@ -130,11 +126,10 @@ extension MainViewController: UITabBarControllerDelegate {
         default:
             break
         }
-        
+
         if let featureVC = viewController as? FeatureViewController,
             featureVC.viewControllers.count == 1,
-            let rootVC = featureVC.viewControllers.first as? TopScrollable
-        {
+            let rootVC = featureVC.viewControllers.first as? TopScrollable {
             rootVC.scrollToTop()
         }
 
@@ -149,8 +144,7 @@ extension MainViewController: UITabBarControllerDelegate {
         let onNotifications = self.selectedViewController == self.notificationsFeatureViewController
         let goingToNotifications = controller == self.notificationsFeatureViewController
         guard (onNotifications && !goingToNotifications) ||
-              (!onNotifications && goingToNotifications) else
-        {
+              (!onNotifications && goingToNotifications) else {
             return
         }
 

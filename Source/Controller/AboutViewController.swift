@@ -6,10 +6,10 @@
 //  Copyright © 2019 Verse Communications Inc. All rights reserved.
 //
 
-import Foundation
-import UIKit
-import Logger
 import Analytics
+import Foundation
+import Logger
+import UIKit
 
 class AboutViewController: ContentViewController {
 
@@ -22,10 +22,9 @@ class AboutViewController: ContentViewController {
         let dataSource = PostReplyPaginatedDataSource()
         dataSource.delegate = self
         return dataSource
-        
     }()
-    
-    private lazy var delegate = PostReplyPaginatedDelegate(on: self)
+
+    private lazy weak var delegate = PostReplyPaginatedDelegate(on: self)
 
     private var followings: [About] = []
     private var followers: [About] = []
@@ -38,7 +37,7 @@ class AboutViewController: ContentViewController {
         view.backgroundColor = .appBackground
         return view
     }()
-    
+
     private var optionsIcon: UIBarButtonItem?
 
     // TODO https://app.asana.com/0/914798787098068/1146899678085073/f
@@ -69,9 +68,8 @@ class AboutViewController: ContentViewController {
                                                                  target: self,
                                                                  action: #selector(didPressOptionsIcon))
         self.navigationItem.rightBarButtonItem?.tintColor = .secondaryAction
-
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         CrashReporting.shared.record("Did Show About")
@@ -164,9 +162,8 @@ class AboutViewController: ContentViewController {
                                                  action: #selector(editPhotoButtonTouchUpInside),
                                                  for: .touchUpInside)
 
-
         self.aboutView.followButton.onUpdate = {
-            following in
+            _ in
 
             self.loadFollowedBy()
 
@@ -177,7 +174,7 @@ class AboutViewController: ContentViewController {
     }
 
     @objc private func editPhotoButtonTouchUpInside(sender: AnyObject) {
-        
+
         Analytics.shared.trackDidTapButton(buttonName: "update_avatar")
         self.imagePicker.present(from: sender, openCameraInSelfieMode: true) {
             [unowned self] image in
@@ -192,7 +189,7 @@ class AboutViewController: ContentViewController {
 
     @objc private func didPressOptionsIcon(sender: AnyObject) {
         Analytics.shared.trackDidTapButton(buttonName: "options")
-        
+
         var actions = [UIAlertAction]()
 
         let sharePublicIdentifier = UIAlertAction(title: Text.sharePublicIdentifier.text, style: .default) { _ in
@@ -212,7 +209,7 @@ class AboutViewController: ContentViewController {
                 let who = self.about?.name ?? self.identity
                 let text = Text.shareThisProfileText.text(["who": who,
                                                            "link": publicLink.absoluteString])
-                
+
                 let activityController = UIActivityViewController(activityItems: [text],
                                                                   applicationActivities: nil)
                 activityController.configurePopover(from: sender)
@@ -240,9 +237,9 @@ class AboutViewController: ContentViewController {
     }
 
     private func publishProfilePhoto(_ uiimage: UIImage, completionHandler: @escaping () -> Void) {
-        //AppController.shared.showProgress()
+        // AppController.shared.showProgress()
 
-        Bots.current.addBlob(jpegOf: uiimage, largestDimension: 1000) { [weak self] image, error in
+        Bots.current.addBlob(jpegOf: uiimage, largestDimension: 1_000) { [weak self] image, error in
             Log.optional(error)
             CrashReporting.shared.reportIfNeeded(error: error)
             if let error = error {
@@ -269,13 +266,13 @@ class AboutViewController: ContentViewController {
                         Bots.current.about { (newAbout, error) in
                             Log.optional(error)
                             CrashReporting.shared.reportIfNeeded(error: error)
-                            
+
                             AppController.shared.hideProgress()
-                            
+
                             if let newAbout = newAbout {
                                 NotificationCenter.default.post(Notification.didUpdateAbout(newAbout))
                             }
-                            
+
                             self?.aboutView.imageView.fade(to: uiimage)
                             completionHandler()
                         }
@@ -287,12 +284,12 @@ class AboutViewController: ContentViewController {
 
     private func didPressEdit(sender: AnyObject) {
         Analytics.shared.trackDidTapButton(buttonName: "update_profile")
-        
+
         guard let about = self.about else { return }
         let controller = EditAboutViewController(with: about)
         controller.saveCompletion = {
             [weak self] _ in
-            //AppController.shared.showProgress()
+            // AppController.shared.showProgress()
             Bots.current.publish(content: controller.about) { [weak self] (_, error) in
                 Log.optional(error)
                 CrashReporting.shared.reportIfNeeded(error: error)
@@ -399,7 +396,7 @@ class AboutViewController: ContentViewController {
     }
 }
 
-fileprivate class AboutPostView: KeyValueView {
+private class AboutPostView: KeyValueView {
 
     lazy var view = PostCellView()
 
@@ -421,7 +418,7 @@ fileprivate class AboutPostView: KeyValueView {
 }
 
 extension AboutViewController: PostReplyPaginatedDataSourceDelegate {
-    
+
     func postReplyView(view: PostReplyView, didLoad keyValue: KeyValue) {
         view.postView.tapGesture.tap = {
             [weak self] in
@@ -441,10 +438,9 @@ extension AboutViewController: PostReplyPaginatedDataSourceDelegate {
             self?.pushThreadViewController(with: keyValue, startReplying: true)
         }
     }
-    
+
     private func pushThreadViewController(with keyValue: KeyValue, startReplying: Bool = false) {
         let controller = ThreadViewController(with: keyValue, startReplying: startReplying)
         self.navigationController?.pushViewController(controller, animated: true)
     }
-    
 }

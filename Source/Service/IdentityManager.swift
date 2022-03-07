@@ -21,11 +21,11 @@ class IdentityManager {
     /// This specifically does not return all Secrets because
     /// there is no need to deserialize all at the same time.
     func identities() -> [Identity] {
-        return UserDefaults.standard.identities
+        UserDefaults.standard.identities
     }
 
     var selectedIdentity: Identity? {
-        return UserDefaults.standard.identity
+        UserDefaults.standard.identity
     }
 
     func select(_ identity: Identity?) {
@@ -34,7 +34,7 @@ class IdentityManager {
             UserDefaults.standard.identity = nil
             return
         }
-        
+
         let contains = self.identities().contains { $0 == identity }
         guard contains else { return }
         UserDefaults.standard.identity = identity
@@ -112,7 +112,7 @@ fileprivate extension UserDefaults {
 
     var identity: Identity? {
         get {
-            return self.string(forKey: #function)
+            self.string(forKey: #function)
         }
         set {
             self.set(newValue, forKey: #function)

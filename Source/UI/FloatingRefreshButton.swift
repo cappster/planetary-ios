@@ -9,7 +9,7 @@
 import UIKit
 
 class FloatingRefreshButton: UIButton {
-    
+
     init() {
         super.init(frame: .zero)
         self.useAutoLayout()
@@ -21,27 +21,26 @@ class FloatingRefreshButton: UIButton {
         self.contentEdgeInsets = .floatingRefreshButton
         self.isHidden = true
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     func layout(in view: UIView, below tableView: UITableView) {
         Layout.centerHorizontally(self, in: view)
         self.constrainHeight(to: 32)
         self.roundedCorners(radius: 16)
         self.constrainTop(toTopOf: tableView, constant: 8)
     }
-    
+
     func layout(in view: UIView, below collectionView: UICollectionView) {
         Layout.centerHorizontally(self, in: view)
         self.constrainHeight(to: 32)
         self.roundedCorners(radius: 16)
         self.constrainTop(toTopOf: collectionView, constant: 8)
     }
-    
+
     func show(animated: Bool = true) {
-        return
         /*
         guard self.isHidden else {
             return
@@ -61,7 +60,7 @@ class FloatingRefreshButton: UIButton {
             self.isHidden = false
         }*/
     }
-    
+
     func hide(animated: Bool = true) {
         if animated {
             self.transform = .identity
@@ -77,5 +76,4 @@ class FloatingRefreshButton: UIButton {
             self.isHidden = true
         }
     }
-    
 }

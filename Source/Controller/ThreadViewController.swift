@@ -6,33 +6,33 @@
 //  Copyright © 2019 Verse Communications Inc. All rights reserved.
 //
 
-import Foundation
-import UIKit
-import Logger
 import Analytics
+import Foundation
+import Logger
+import UIKit
 
 class ThreadViewController: ContentViewController {
 
     private let post: KeyValue
     private var root: KeyValue?
-    
+
     private lazy var dataSource: ThreadReplyPaginatedTableViewDataSource = {
         var dataSource = ThreadReplyPaginatedTableViewDataSource()
         dataSource.delegate = self
         return dataSource
     }()
-    
-    private let textViewDelegate = ThreadTextViewDelegate(font: UIFont.verse.reply,
+
+    private weak var textViewDelegate = ThreadTextViewDelegate(font: UIFont.verse.reply,
                                                           color: UIColor.text.reply,
                                                           placeholderText: .postAReply,
                                                           placeholderColor: UIColor.text.placeholder)
 
     private var branchKey: Identifier {
-        return self.rootKey
+        self.rootKey
     }
 
     private var rootKey: Identifier {
-        return self.root?.key ?? self.post.key
+        self.root?.key ?? self.post.key
     }
 
     private lazy var tableView: UITableView = {
@@ -88,7 +88,7 @@ class ThreadViewController: ContentViewController {
         view.backgroundColor = .cardBackground
         return view
     }()
-    
+
     private lazy var menu: AboutsMenu = {
         let view = AboutsMenu()
         view.bottomSeparator.isHidden = true
@@ -96,7 +96,7 @@ class ThreadViewController: ContentViewController {
     }()
 
     private let headerView = PostHeaderView()
-    
+
     // this view manages it's own height constraints
     // checkout ImageGallery.open() and close()
     private lazy var galleryView: ImageGalleryView = {
@@ -118,7 +118,7 @@ class ThreadViewController: ContentViewController {
         view.backgroundColor = .cardBackground
         return view
     }()
-    
+
     private let imagePicker = ImagePicker()
 
     private var onNextUpdateScrollToPostWithKeyValueKey: Identifier?
@@ -129,7 +129,7 @@ class ThreadViewController: ContentViewController {
         assert(keyValue.value.content.isPost)
         self.post = keyValue
         self.onNextUpdateScrollToPostWithKeyValueKey = keyValue.key
-        //self.interactionView.postIdentifier = Identity
+        // self.interactionView.postIdentifier = Identity
         super.init(scrollable: false)
         self.isKeyboardHandlingEnabled = true
         self.showsTabBarBorder = false
@@ -148,13 +148,13 @@ class ThreadViewController: ContentViewController {
         Layout.fillTop(of: self.contentView, with: self.tableView)
         Layout.fillTop(of: self.contentView, with: self.menu)
         Layout.fillSouth(of: self.tableView, with: self.replyTextView)
-        
+
         Layout.fillSouth(of: self.replyTextView, with: self.galleryView)
-        
+
         Layout.fillBottom(of: self.contentView, with: self.buttonsView, respectSafeArea: false)
 
         self.buttonsView.pinTop(toBottomOf: self.galleryView)
-        
+
         self.buttonsView.constrainHeight(to: 0)
     }
 
@@ -169,7 +169,7 @@ class ThreadViewController: ContentViewController {
         Analytics.shared.trackDidShowScreen(screenName: "post")
         self.replyTextViewBecomeFirstResponderIfNecessary()
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         headerView.removeFromSuperview()
@@ -225,7 +225,6 @@ class ThreadViewController: ContentViewController {
         self.interactionView.update()
     }
 
-
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         sizeHeaderToFit()
@@ -240,7 +239,6 @@ class ThreadViewController: ContentViewController {
             self.tableHeaderWidthConstraint?.isActive = true
         }
     }
-
 
     private func addNavigationHeaderViewIfNeeded() {
         guard headerView.superview == nil, let navBar = self.navigationController?.navigationBar else { return }
@@ -262,8 +260,7 @@ class ThreadViewController: ContentViewController {
     /// useful to stagger animations, just in case there is too much going
     /// on at one time.
     private func scrollToLastVisibleIndexPath(delay: TimeInterval = 0.25,
-                                              animated: Bool = true)
-    {
+                                              animated: Bool = true) {
         guard let indexPath = self.indexPathToScrollToOnKeyboardDidShow else { return }
         DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
             self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: animated)
@@ -295,18 +292,18 @@ class ThreadViewController: ContentViewController {
             self.textViewDelegate.clear()
             self.menu.hide()
         }
-        
+
         self.textViewDelegate.didChangeMention = { [unowned self] string in
             self.menu.filter(by: string)
         }
-        
+
         let buttonViewAnimationDuration: TimeInterval = 0.5
-        
+
         self.textViewDelegate.didBeginEditing = { _ in
             self.buttonsView.maximize(duration: buttonViewAnimationDuration)
             self.scrollToLastVisibleIndexPath()
         }
-        
+
         self.textViewDelegate.didEndEditing = { _ in
             self.buttonsView.minimize(duration: buttonViewAnimationDuration)
         }
@@ -328,10 +325,10 @@ class ThreadViewController: ContentViewController {
         guard text.length > 0 else { return }
         Analytics.shared.trackDidTapButton(buttonName: "reply")
         self.buttonsView.postButton.isEnabled = false
-        
+
         let post = Post(attributedText: text, root: self.rootKey, branches: [self.branchKey])
         let images = self.galleryView.images
-        //AppController.shared.showProgress()
+        // AppController.shared.showProgress()
         Bots.current.publish(post, with: images) { [weak self] key, error in
             Log.optional(error)
             CrashReporting.shared.reportIfNeeded(error: error)
@@ -351,17 +348,17 @@ class ThreadViewController: ContentViewController {
             self?.buttonsView.postButton.isEnabled = true
         }
     }
-    
+
     @objc func didPressPreviewToggle() {
         Analytics.shared.trackDidTapButton(buttonName: "preview")
         self.replyTextView.previewActive = self.buttonsView.previewToggle.isOn
         self.buttonsView.maximize(duration: 0)
     }
-    
+
     // MARK: Attaching photos
-    
+
     @objc private func photoButtonTouchUpInside(sender: AnyObject) {
-        
+
         Analytics.shared.trackDidTapButton(buttonName: "attach_photo")
         self.imagePicker.present(from: sender, controller: self) { [weak self] image in
             if let image = image { self?.galleryView.add(image) }
@@ -399,7 +396,7 @@ extension ThreadViewController: UITableViewDelegate {
 }
 
 extension ThreadViewController: ThreadReplyPaginatedTableViewDataSourceDelegate {
-    
+
     func threadReplyView(view: ThreadReplyView, didLoad keyValue: KeyValue) {
         view.tapGesture.tap = { [weak self] in
             self?.tableView.beginUpdates()
@@ -416,14 +413,14 @@ extension ThreadViewController: ThreadReplyPaginatedTableViewDataSourceDelegate 
 }
 
 extension ThreadViewController: ThreadInteractionViewDelegate {
-    
+
     func threadInteractionView(_ view: ThreadInteractionView, didLike post: KeyValue) {
         let vote = ContentVote(link: self.rootKey,
                                value: 1,
                                root: self.rootKey,
                                branches: [self.branchKey])
-        //AppController.shared.showProgress()
-        Bots.current.publish(content: vote) { [weak self] key, error in
+        // AppController.shared.showProgress()
+        Bots.current.publish(content: vote) { [weak self] _, error in
             Log.optional(error)
             CrashReporting.shared.reportIfNeeded(error: error)
             DispatchQueue.main.async { [weak self] in
@@ -440,8 +437,7 @@ extension ThreadViewController: ThreadInteractionViewDelegate {
     }
 }
 
-
-fileprivate class ThreadTextViewDelegate: MentionTextViewDelegate {
+private class ThreadTextViewDelegate: MentionTextViewDelegate {
 
     // On each keystroke, checks if the text biew needs to be scrollable.
     // By default it is not so that it grows taller with each line.  But

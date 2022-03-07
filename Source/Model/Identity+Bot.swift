@@ -10,7 +10,7 @@ import Foundation
 
 extension Identity {
     var isCurrentUser: Bool {
-        return self == Bots.current.identity
+        self == Bots.current.identity
     }
 
     // a safety to help avoid passing in the current user's identity into an API call
@@ -19,9 +19,8 @@ extension Identity {
             assertionFailure("Did not expect this to be the current user's Identity.")
         }
     }
-    
+
     func isNotMe(identifier: String) -> Bool {
-        return self.self != identifier
+        self.self != identifier
     }
-    
 }

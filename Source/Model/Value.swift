@@ -15,7 +15,7 @@ struct Value: Codable {
     let previous: Identifier?   // TODO? only if seq == 1 but external sbot handles this currently
     let sequence: Int
     let signature: Identifier
-    
+
     /// The time that the poster claims to have posted this message. Should not be trusted.
     /// Note that this is time in milliseconds, not seconds.
     let timestamp: Float64

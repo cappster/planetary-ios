@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class KeyValuePaginatedCollectionViewDelegate: NSObject {
-    
+
     /// View controller that will be used for navigating
     /// when the keyValue is selected.
     weak var viewController: UIViewController?
@@ -18,12 +18,10 @@ class KeyValuePaginatedCollectionViewDelegate: NSObject {
     init(on viewController: UIViewController) {
         self.viewController = viewController
     }
-    
 }
 
 extension KeyValuePaginatedCollectionViewDelegate: UICollectionViewDelegate {
-    
-    
+
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let dataSource = collectionView.dataSource as? KeyValuePaginatedCollectionViewDataSource else {
             return
@@ -35,4 +33,3 @@ extension KeyValuePaginatedCollectionViewDelegate: UICollectionViewDelegate {
         self.viewController?.navigationController?.pushViewController(controller, animated: true)
     }
 }
-

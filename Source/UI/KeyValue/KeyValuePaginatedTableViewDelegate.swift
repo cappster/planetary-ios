@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class KeyValuePaginatedTableViewDelegate: NSObject, UITableViewDelegate {
-    
+
     /// View controller that will be used for navigating
     /// when the keyValue is selected.
     weak var viewController: UIViewController?
@@ -18,7 +18,7 @@ class KeyValuePaginatedTableViewDelegate: NSObject, UITableViewDelegate {
     init(on viewController: UIViewController) {
         self.viewController = viewController
     }
-    
+
     // MARK: Handle tap event elsewhere in the `cell.contentView`
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -34,18 +34,18 @@ class KeyValuePaginatedTableViewDelegate: NSObject, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelect keyValue: KeyValue) {
         self.pushViewController(for: keyValue)
     }
-    
+
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 10
+        10
     }
-    
+
     // MARK: Navigating with controller
 
     private func pushViewController(for keyValue: KeyValue) {
         guard let controller = self.viewController(for: keyValue) else { return }
         self.viewController?.navigationController?.pushViewController(controller, animated: true)
     }
-    
+
     // MARK: Controller for ContentType
 
     // Override in subclass
@@ -54,5 +54,4 @@ class KeyValuePaginatedTableViewDelegate: NSObject, UITableViewDelegate {
             default: return nil
         }
     }
-    
 }

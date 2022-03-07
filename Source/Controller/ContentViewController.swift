@@ -57,7 +57,7 @@ class ContentViewController: UIViewController, KeyboardHandling {
         self.removeBackItemText()
         self.registerNotifications()
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -124,7 +124,7 @@ class ContentViewController: UIViewController, KeyboardHandling {
             AppController.shared.mainViewController?.setTopBorder(hidden: false)
         }
     }
-    
+
     func addSubviews() {
         // clients are encouraged to override but must call super
     }
@@ -135,7 +135,7 @@ class ContentViewController: UIViewController, KeyboardHandling {
 
     // MARK: Keyboard handling
 
-    var isKeyboardHandlingEnabled: Bool = false {
+    var isKeyboardHandlingEnabled = false {
         didSet {
             isKeyboardHandlingEnabled ?
                 self.registerForKeyboardNotifications() :
@@ -145,8 +145,7 @@ class ContentViewController: UIViewController, KeyboardHandling {
 
     func setKeyboardTopConstraint(constant: CGFloat,
                                   duration: TimeInterval,
-                                  curve: UIView.AnimationCurve)
-    {
+                                  curve: UIView.AnimationCurve) {
         UIView.beginAnimations("setKeyboardTopConstraint", context: nil)
         UIView.setAnimationCurve(curve)
         UIView.setAnimationDuration(duration)
@@ -191,16 +190,16 @@ class ContentViewController: UIViewController, KeyboardHandling {
     func deregisterNotifications() {
         self.deregisterDidBlockUser()
     }
-    
+
     // MARK: Loading animation
-    
+
     private lazy var loadingAnimation: PeerConnectionAnimation = {
         let view = PeerConnectionAnimation(color: .networkAnimation)
         view.setDotCount(inside: false, count: 1, animated: false)
         view.setDotCount(inside: true, count: 2, animated: false)
         return view
     }()
-    
+
     private lazy var loadingLabel: UILabel = {
         let view = UILabel.forAutoLayout()
         view.textAlignment = .center
@@ -209,14 +208,14 @@ class ContentViewController: UIViewController, KeyboardHandling {
         view.textColor = UIColor.tint.default
         return view
     }()
-    
+
     func addLoadingAnimation() {
         Layout.center(self.loadingLabel, in: self.view)
         Layout.centerHorizontally(self.loadingAnimation, in: self.view)
         self.loadingAnimation.constrainSize(to: self.loadingAnimation.totalDiameter)
         self.loadingAnimation.pinBottom(toTopOf: self.loadingLabel, constant: -20, activate: true)
     }
-    
+
     func removeLoadingAnimation() {
         self.loadingLabel.removeFromSuperview()
         self.loadingAnimation.removeFromSuperview()

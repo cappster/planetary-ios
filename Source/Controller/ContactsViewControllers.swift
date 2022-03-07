@@ -6,9 +6,9 @@
 //  Copyright © 2019 Verse Communications Inc. All rights reserved.
 //
 
+import Analytics
 import Foundation
 import UIKit
-import Analytics
 
 class ContactsViewController: ContentViewController, AboutTableViewDelegate {
 
@@ -36,7 +36,7 @@ class ContactsViewController: ContentViewController, AboutTableViewDelegate {
         super.viewDidLoad()
         Layout.fill(view: self.view, with: self.tableView)
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         CrashReporting.shared.record("Did Show Contacts")
@@ -51,4 +51,3 @@ class ContactsViewController: ContentViewController, AboutTableViewDelegate {
         fatalError("init(coder:) has not been implemented")
     }
 }
-

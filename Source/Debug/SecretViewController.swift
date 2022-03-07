@@ -6,9 +6,9 @@
 //  Copyright © 2019 Verse Communications Inc. All rights reserved.
 //
 
+import Analytics
 import Foundation
 import UIKit
-import Analytics
 class SecretViewController: UIViewController {
 
     private var secret: Secret?
@@ -67,7 +67,7 @@ class SecretViewController: UIViewController {
         self.addSubviews()
         self.update()
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         CrashReporting.shared.record("Did Show Secret")

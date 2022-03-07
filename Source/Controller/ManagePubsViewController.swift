@@ -7,15 +7,15 @@
 //
 
 import Foundation
-import UIKit
 import Logger
+import UIKit
 
 class ManagePubsViewController: UITableViewController, KnownPubsTableViewDataSourceDelegate {
-    
+
     lazy var dataSource = KnownPubsTableViewDataSource(pubs: [])
-    
+
     // MARK: Lifecycle
-    
+
     convenience init() {
         self.init(style: .grouped)
         self.title = Text.ManagePubs.title.text
@@ -43,13 +43,13 @@ class ManagePubsViewController: UITableViewController, KnownPubsTableViewDataSou
             }
         }
     }
-    
+
     func reload() {
         self.tableView.reloadData()
     }
-    
-    // MARK:- UITableViewDelegate
-    
+
+    // MARK: - UITableViewDelegate
+
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let targetController = self.navigationController

@@ -6,12 +6,12 @@
 //  Copyright © 2019 Verse Communications Inc. All rights reserved.
 //
 
+import Analytics
 import Foundation
+import Logger
 import UIKit
 import UserNotifications
 import UserNotificationsUI
-import Logger
-import Analytics
 
 // https://github.com/planetary-social/infrastructure/wiki/Apple-Push-Notification-Infrastructure
 extension AppDelegate: UNUserNotificationCenterDelegate {
@@ -22,28 +22,25 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     }
 
     func application(_ application: UIApplication,
-                     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data)
-    {
+                     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         AppController.shared.updatePushNotificationToken(deviceToken)
     }
 
     func application(_ application: UIApplication,
-                     didFailToRegisterForRemoteNotificationsWithError error: Error)
-    {
+                     didFailToRegisterForRemoteNotificationsWithError error: Error) {
         guard UIDevice.isSimulator == false else { return }
         Log.fatal(.apiError, "Could not register for push notifications: \(error)")
     }
 
     func application(_ application: UIApplication,
-                     didReceiveRemoteNotification userInfo: [AnyHashable : Any],
-                     fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void)
-    {
+                     didReceiveRemoteNotification userInfo: [AnyHashable: Any],
+                     fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         // only support silent notifications for now
         guard userInfo.aps.isContentAvailable else {
             completionHandler(.noData)
             return
         }
-        
+
         Log.info("Triggering background sync from silent push notification")
         Analytics.shared.trackDidReceiveRemoteNotification()
         handleBackgroundFetch(completionHandler: completionHandler)
@@ -70,7 +67,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         let request = UNNotificationRequest(identifier: identifier,
                                             content: content,
                                             trigger: trigger)
-        
+
         // badge is incremented regardless of foreground/background
         DispatchQueue.main.async {
             UIApplication.shared.applicationIconBadgeNumber += 1
@@ -84,20 +81,19 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             Log.optional(error)
         }
     }
-    
+
     /// Transforms a report into a scheduled `UNNotificationRequest` that the human
     /// can interact with.
     func scheduleLocalNotification(_ report: Report) {
-        
-        
+
         Bots.current.about(queue: .global(qos: .background), identity: report.keyValue.value.author) { (about, error) in
             Log.optional(error)
             CrashReporting.shared.reportIfNeeded(error: error)
-            
+
             let content = UNMutableNotificationContent()
-            
+
             let who = about?.nameOrIdentity ?? Text.Report.somebody.text
-            
+
             switch report.reportType {
             case .feedFollowed:
                 content.title = NSString.localizedUserNotificationString(forKey: Text.Report.feedFollowed.text,
@@ -118,9 +114,9 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
                 content.title = NSString.localizedUserNotificationString(forKey: Text.Report.messageLiked.text,
                                                                          arguments: [who])
             }
-            
+
             content.sound = UNNotificationSound.default
-            
+
             let request = UNNotificationRequest(identifier: report.messageIdentifier,
                                                 content: content,
                                                 trigger: nil)
@@ -132,8 +128,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
                 Log.optional(error)
             }
         }
-        
-        
     }
 
     /// If the response is the default "tap" interaction, forwards the notification to the AppController.
@@ -141,8 +135,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     /// asynchronous operations are not guaranteed to be completed before the UI is visible.
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,
-                                withCompletionHandler completionHandler: @escaping () -> Void)
-    {
+                                withCompletionHandler completionHandler: @escaping () -> Void) {
         guard response.actionIdentifier == UNNotificationDefaultActionIdentifier else {
             completionHandler()
             return
@@ -150,20 +143,20 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         AppController.shared.received(backgroundNotification: response.notification)
         completionHandler()
     }
-    
+
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         completionHandler([.alert, .badge, .sound])
     }
-    
+
     // MARK: Reports
-    
+
     private func addReportsObservers() {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(didCreateReportHandler(notification:)),
                                                name: .didCreateReport,
                                                object: nil)
     }
-    
+
     @objc func didCreateReportHandler(notification: Notification) {
         guard let report = notification.userInfo?["report"] as? Report else {
             return

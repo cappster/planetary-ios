@@ -21,8 +21,7 @@ extension UIView {
     @discardableResult
     func pinTop(toBottomOf view: UIView,
                 constant: CGFloat = 0,
-                activate: Bool = true) -> NSLayoutConstraint
-    {
+                activate: Bool = true) -> NSLayoutConstraint {
         let constraint = self.topAnchor.constraint(equalTo: view.bottomAnchor, constant: constant)
         constraint.isActive = activate
         return constraint
@@ -67,8 +66,7 @@ extension UIView {
     @discardableResult
     func pinBottom(toTopOf view: UIView,
                    constant: CGFloat = 0,
-                   activate: Bool = true) -> NSLayoutConstraint
-    {
+                   activate: Bool = true) -> NSLayoutConstraint {
         let constraint = self.bottomAnchor.constraint(equalTo: view.topAnchor, constant: constant)
         constraint.isActive = activate
         return constraint
@@ -126,7 +124,7 @@ extension UIView {
         self.constrainWidth(to: size.width)
         self.constrainHeight(to: size.height)
     }
-    
+
     @discardableResult
     func constrainSquare() -> NSLayoutConstraint {
         self.translatesAutoresizingMaskIntoConstraints = false
@@ -135,7 +133,6 @@ extension UIView {
         constraint.isActive = true
         return constraint
     }
-
 
     func constrain(to view: UIView) {
         assert(self.superview == view.superview)
@@ -188,5 +185,4 @@ extension UIView {
         self.topAnchor.constraint(equalTo: view.topAnchor,
                                   constant: constant).isActive = true
     }
-    
 }

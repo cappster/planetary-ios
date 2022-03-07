@@ -9,15 +9,14 @@
 import Foundation
 
 class AsynchronousBlockOperation: AsynchronousOperation {
-    
+
     var block: (AsynchronousBlockOperation) -> Void
-    
+
     init(block: @escaping (AsynchronousBlockOperation) -> Void) {
         self.block = block
     }
-    
+
     override func main() {
         self.block(self)
     }
-    
 }

@@ -16,16 +16,16 @@ class BirthdateOnboardingStep: OnboardingStep, UITextFieldDelegate, UIPickerView
     init() {
         super.init(.birthday, buttonStyle: .horizontalStack)
     }
-    
+
     lazy var currentYear: Int = {
         let today = Date()
         let calendar = Calendar.current
         return calendar.component(.year, from: today)
     }()
-    
+
     lazy var years: [Int] = {
         var years = [Int]()
-        for i in (currentYear-99..<currentYear+1).reversed() {
+        for i in (currentYear - 99..<currentYear + 1).reversed() {
             years.append(i)
         }
         return years
@@ -56,7 +56,7 @@ class BirthdateOnboardingStep: OnboardingStep, UITextFieldDelegate, UIPickerView
         self.data.birthdate = birthdate
         super.performPrimaryAction(sender: button)
     }
-    
+
     private func select(index: Int) {
         guard let selectedDate = Calendar.current.date(byAdding: .year, value: -index, to: Date()) else {
             return
@@ -67,25 +67,25 @@ class BirthdateOnboardingStep: OnboardingStep, UITextFieldDelegate, UIPickerView
             self.view.primaryButton.isEnabled = self.birthdate <= validDate
         }
     }
-    
+
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
+        1
     }
-    
+
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return years.count
+        years.count
     }
-    
+
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return "\(years[row])"
+        "\(years[row])"
     }
-    
+
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         select(index: row)
     }
 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        return false
+        false
     }
 }
 

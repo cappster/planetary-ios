@@ -5,9 +5,9 @@
 //  Created by Martin Dutra on 30/11/21.
 //
 
-import XCTest
-@testable import Logger
 import CocoaLumberjackSwift
+@testable import Logger
+import XCTest
 
 final class CocoaLumberjackServiceTests: XCTestCase {
 

@@ -6,9 +6,9 @@
 //  Copyright © 2019 Verse Communications Inc. All rights reserved.
 //
 
+import Analytics
 import Foundation
 import UIKit
-import Analytics
 
 class BlobViewController: ContentViewController {
 
@@ -34,7 +34,7 @@ class BlobViewController: ContentViewController {
         Layout.fill(view: self.contentView, with: self.imageView)
         self.update()
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         CrashReporting.shared.record("Did Show Blob")

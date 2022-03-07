@@ -9,7 +9,7 @@
 import Foundation
 
 struct PubAPI {
-    
+
     static var shared: PubAPIService = {
         // We don't want to spam the push API when running unit tests
         #if UNIT_TESTS
@@ -22,5 +22,4 @@ struct PubAPI {
         }
         #endif
     }()
-    
 }

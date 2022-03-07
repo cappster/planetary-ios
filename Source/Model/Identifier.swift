@@ -6,8 +6,8 @@
 //  Copyright © 2019 Verse Communications Inc. All rights reserved.
 //
 
-import Foundation
 import CryptoKit
+import Foundation
 
 enum Algorithm: String, Codable {
 
@@ -56,11 +56,7 @@ extension Identifier {
     // the first character of the identifier indicating
     // what kind of identifier this is
     var sigil: Sigil {
-        if      self.hasPrefix(Sigil.blob.rawValue)         { return .blob }
-        else if self.hasPrefix(Sigil.feed.rawValue)         { return .feed }
-        else if self.hasPrefix(Sigil.message.rawValue)      { return .message }
-        
-        else                                                { return .unsupported }
+        if      self.hasPrefix(Sigil.blob.rawValue) { return .blob } else if self.hasPrefix(Sigil.feed.rawValue) { return .feed } else if self.hasPrefix(Sigil.message.rawValue) { return .message } else { return .unsupported }
     }
 
     /// the base64 number between the sigil, marker, and algorithm
@@ -74,7 +70,7 @@ extension Identifier {
         let index = component.index(after: component.startIndex)
         return String(component[index...])
     }
-    
+
     var idBytes: Data? {
         if !self.isValidIdentifier {
             #if DEBUG
@@ -85,41 +81,38 @@ extension Identifier {
         guard let data = Data(base64Encoded: self.id, options: .ignoreUnknownCharacters) else { return nil }
         return data
     }
-    
+
     func hexEncodedString() -> String {
         guard let bytes = self.idBytes else {
             return ""
         }
-        
+
         let hexDigits = Array("0123456789abcdef".utf16)
         var hexChars = [UTF16.CodeUnit]()
         hexChars.reserveCapacity(bytes.count * 2)
-        
+
         for byte in bytes {
             let (index1, index2) = Int(byte).quotientAndRemainder(dividingBy: 16)
             hexChars.append(hexDigits[index1])
             hexChars.append(hexDigits[index2])
         }
-        
+
         return String(utf16CodeUnits: hexChars, count: hexChars.count)
     }
 
     // the trailing suffix indicating how the id is encoded
     var algorithm: Algorithm {
-        if      self.hasSuffix(Algorithm.sha256.rawValue)   { return .sha256 }
-        else if self.hasSuffix(Algorithm.ed25519.rawValue)  { return .ed25519 }
-        else if self.hasSuffix(Algorithm.ggfeed.rawValue)   { return .ggfeed }
-        else                                                { return .unsupported }
+        if      self.hasSuffix(Algorithm.sha256.rawValue) { return .sha256 } else if self.hasSuffix(Algorithm.ed25519.rawValue) { return .ed25519 } else if self.hasSuffix(Algorithm.ggfeed.rawValue) { return .ggfeed } else { return .unsupported }
     }
 
     var isValidIdentifier: Bool {
-        return self.sigil != .unsupported &&
+        self.sigil != .unsupported &&
             self.id != Identifier.unsupported &&
             self.algorithm != .unsupported
     }
 
     var isBlob: Bool {
-        return self.sigil == .blob
+        self.sigil == .blob
     }
 
     // TODO: this is a iOS13 specific way to do sha25 hashing....

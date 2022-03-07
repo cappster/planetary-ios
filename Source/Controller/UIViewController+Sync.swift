@@ -28,7 +28,7 @@ extension UIViewController {
     func didSync(notification: NSNotification) {
         // subclasses are encouraged to override
     }
-    
+
     func registerDidRefresh() {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(didRefresh(notification:)),

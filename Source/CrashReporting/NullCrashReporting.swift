@@ -12,17 +12,16 @@ import Foundation
 /// for use with unit or API test targets.
 
 class NullCrashReporting: CrashReportingService {
-    
+
     func identify(about: About?, network: NetworkKey) { }
-    
+
     func forget() { }
-    
+
     func crash() { }
-    
+
     func record(_ message: String) { }
-    
+
     func reportIfNeeded(error: Error?) { }
 
     func reportIfNeeded(error: Error?, metadata: [AnyHashable: Any]) { }
-    
 }

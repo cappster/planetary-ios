@@ -6,13 +6,13 @@
 //  Copyright © 2020 Verse Communications Inc. All rights reserved.
 //
 
-import UIKit
 import Logger
+import UIKit
 
 class FollowerTableViewController: AboutTableViewController {
 
     var identity: Identity
-    var startingAbouts: [About]? = nil
+    var startingAbouts: [About]?
 
     init(identity: Identity, followers: [About]? = nil) {
         self.identity = identity

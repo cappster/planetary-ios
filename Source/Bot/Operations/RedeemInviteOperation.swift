@@ -7,40 +7,40 @@
 //
 
 import Foundation
-import Network
 import Logger
+import Network
 
 class RedeemInviteOperation: AsynchronousOperation {
 
     /// Star that you want to redeem invitation to
     var star: Star
-    
+
     /// If true, it will automatically follow the star
     var shouldFollow: Bool
-    
+
     /// Result of the operation
     private(set) var result: Result<Void, Error>?
-    
+
     init(star: Star, shouldFollow: Bool) {
         self.star = star
         self.shouldFollow = shouldFollow
         super.init()
     }
-    
+
     override func main() {
         Log.info("RedeemInviteOperation started.")
-        
+
         redeemInvitation { result in
-            
+
             switch result {
             case .success:
                 self.result = .success(())
                 self.finish()
-                
+
             case .failure(let error):
                 Log.optional(error)
                 CrashReporting.shared.reportIfNeeded(error: error)
-                
+
                 // Construct a better error message before returning
                 Bots.current.about(identity: self.star.feed) { about, _ in
                     let starName = about?.name ?? self.star.feed
@@ -50,16 +50,16 @@ class RedeemInviteOperation: AsynchronousOperation {
                         code: 0,
                         userInfo: [NSLocalizedDescriptionKey: localizedMessage]
                     )
-                    
+
                     self.result = .failure(userError)
                     self.finish()
                 }
             }
         }
     }
-        
+
     private func redeemInvitation(completion: @escaping (Result<Void, Error>) -> Void) {
-        
+
         let configuredIdentity = AppConfiguration.current?.identity
         let loggedInIdentity = Bots.current.identity
         guard loggedInIdentity != nil, loggedInIdentity == configuredIdentity else {
@@ -75,7 +75,7 @@ class RedeemInviteOperation: AsynchronousOperation {
                 completion(.failure(error!))
                 return
             }
-            
+
             Log.debug("Publishing Pub (\(star.feed)) message...")
             let pub = star.toPub()
             Bots.current.publish(content: pub) { (_, error) in
@@ -93,15 +93,13 @@ class RedeemInviteOperation: AsynchronousOperation {
                             completion(.failure(error!))
                             return
                         }
-                        
+
                         completion(.success(()))
                     }
                 } else {
                     completion(.success(()))
                 }
-                
             }
         }
     }
-    
 }

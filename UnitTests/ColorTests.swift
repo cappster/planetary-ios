@@ -5,8 +5,8 @@
 //  Created by Christoph on 11/23/19.
 //
 
-import XCTest
 import UIKit
+import XCTest
 
 class ColorTests: XCTestCase {
 

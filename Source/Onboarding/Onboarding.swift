@@ -6,9 +6,9 @@
 //  Copyright © 2019 Verse Communications Inc. All rights reserved.
 //
 
+import Analytics
 import Foundation
 import Logger
-import Analytics
 
 enum OnboardingError: Error {
 
@@ -76,23 +76,22 @@ class Onboarding {
     static func start(birthdate: Date,
                       phone: String,
                       name: String,
-                      completion: @escaping StartCompletion)
-    {
+                      completion: @escaping StartCompletion) {
         guard birthdate.olderThan(yearsAgo: 16) else { completion(nil, .invalidBirthdate); return }
-        
+
         // Phone verification is not used anymore
         // guard phone.isValidPhoneNumber else { completion(nil, .invalidPhoneNumber); return }
-        
+
         guard name.isValidName else { completion(nil, .invalidName); return }
         guard Bots.current.identity == nil else { completion(nil, .cannotOnboardWhileLoggedIn); return }
 
         Analytics.shared.trackOnboardingStart()
 
         // create secret
-        GoBot.shared.createSecret() { secret, error in
+        GoBot.shared.createSecret { secret, error in
             Log.optional(error)
             CrashReporting.shared.reportIfNeeded(error: error)
-            
+
             guard let secret = secret else {
                 completion(nil, .secretFailed(error))
                 return
@@ -111,16 +110,16 @@ class Onboarding {
             }
 
             // login to bot
-            
+
             // Safe to unwrap as configuration has secret, network and bot
             var context = Context(from: configuration)!
-            
+
             context.bot.login(network: configuration.network!, hmacKey: configuration.hmacKey, secret: secret) { error in
                 Log.optional(error)
                 CrashReporting.shared.reportIfNeeded(error: error)
-                
+
                 if let error = error {
-                    completion(nil, .botError(error));
+                    completion(nil, .botError(error))
                     return
                 }
 
@@ -130,7 +129,7 @@ class Onboarding {
                     Log.optional(error)
                     CrashReporting.shared.reportIfNeeded(error: error)
                     if let error = error {
-                        completion(nil, .botError(error));
+                        completion(nil, .botError(error))
                         return
                     }
 
@@ -140,7 +139,7 @@ class Onboarding {
                                                   name: about.name,
                                                   network: network.string)
                     }
-                    
+
                     // done
                     context.about = about
                     completion(context, nil)
@@ -153,8 +152,7 @@ class Onboarding {
     /// Assuming the very last of `Onboarding.start()` completes successfully, this should
     /// be called to set the `Onboarding.status` for the created identity.
     private static func didStart(configuration: AppConfiguration,
-                                 secret: Secret)
-    {
+                                 secret: Secret) {
         // TODO should be one command to do all this
         // TODO doing this here makes it hard to revert if something fails
         configuration.apply()
@@ -171,12 +169,12 @@ class Onboarding {
     /// should not have been set.  Check out `Onboarding.start()` to see all the work that is
     /// done, and to use a template to know what work to undo.
     static func reset(completion: @escaping ResetCompletion) {
-        Bots.current.logout() { error in
+        Bots.current.logout { error in
             Log.optional(error)
             CrashReporting.shared.reportIfNeeded(error: error)
-            
+
             Analytics.shared.forget()
-            
+
             completion()
         }
     }
@@ -192,16 +190,14 @@ class Onboarding {
 
         guard let configuration = AppConfiguration.current,
             let secret = configuration.secret,
-            var context = Context(from: configuration) else
-        {
+            var context = Context(from: configuration) else {
             completion(nil, .configurationFailed)
             return
         }
 
         Bots.current.login(network: context.network,
                            hmacKey: context.signingKey,
-                           secret: secret)
-        {
+                           secret: secret) {
             error in
             if let error = error { completion(context, .botError(error)) }
 
@@ -214,7 +210,7 @@ class Onboarding {
                     return
                 }
                 context.about = about
-                
+
                 CrashReporting.shared.identify(about: about, network: context.network)
                 Analytics.shared.identify(identifier: about.identity,
                                           name: about.name,

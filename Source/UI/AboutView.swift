@@ -48,7 +48,7 @@ class AboutView: KeyValueView {
         button.setTitle(.editProfile)
         button.setImage(UIImage.verse.editPencil)
         button.isSelected = true
-        
+
         return button
     }()
 
@@ -102,9 +102,8 @@ class AboutView: KeyValueView {
 
         Layout.addSeparator(toTopOf: self)
 
-        
         Layout.center(self.circleView, atTopOf: self, inset: 23, size: CGSize(square: Layout.profileImageOutside))
-       //self.addLoadingAnimation()
+       // self.addLoadingAnimation()
 
         Layout.center(self.imageView, in: self.circleView, size: CGSize(square: Layout.profileImageInside))
 
@@ -184,7 +183,7 @@ class AboutView: KeyValueView {
         self.descriptionTextView.attributedText = bio
 
         self.descriptionContainerZeroHeightConstraint?.isActive = bio.string.trimmed.isEmpty
-        
+
         self.editButton.isHidden = !identity.isCurrentUser
         self.editPhotoButton.isHidden = self.editButton.isHidden
 
@@ -194,8 +193,8 @@ class AboutView: KeyValueView {
         } else {
             loadRelationship(identity: identity)
         }
-        
-        if let star = Environment.Communities.stars.first(where: { $0.feed == identity}) {
+
+        if let star = Environment.Communities.stars.first(where: { $0.feed == identity }) {
             followButton.star = star
         } else {
             followButton.star = nil
@@ -229,9 +228,9 @@ class AboutView: KeyValueView {
     // do this once, so we only have one notification
     private func loadRelationship(identity: Identity) {
         guard relationship == nil, let me = Bots.current.identity else { return }
-        
+
         self.followButton.isHidden = true
-        
+
         let relationship = Relationship(from: me, to: identity)
 
         relationship.load {
@@ -271,18 +270,17 @@ class AboutView: KeyValueView {
         self.setNeedsLayout()
         self.layoutIfNeeded()
     }
-    
-    
+
     // MARK: Loading animation
-    
+
     private lazy var loadingAnimation: PeerConnectionAnimation = {
         let view = PeerConnectionAnimation(color: .networkAnimation)
-        //view.multiplier = 2
+        // view.multiplier = 2
         view.setDotCount(inside: false, count: 1, animated: false)
         view.setDotCount(inside: true, count: 2, animated: false)
         return view
     }()
-    
+
     private lazy var loadingLabel: UILabel = {
         let view = UILabel.forAutoLayout()
         view.textAlignment = .center
@@ -291,14 +289,14 @@ class AboutView: KeyValueView {
         view.textColor = UIColor.tint.default
         return view
     }()
-    
+
     func addLoadingAnimation() {
-        //Layout.center(self.loadingLabel, in: self.circleView)
+        // Layout.center(self.loadingLabel, in: self.circleView)
         Layout.centerHorizontally(self.loadingAnimation, in: self.circleView)
         self.loadingAnimation.constrainSize(to: Layout.profileImageOutside)
         self.loadingAnimation.pinBottom(toTopOf: self.loadingLabel, constant: -20, activate: true)
     }
-    
+
     func removeLoadingAnimation() {
         self.loadingLabel.removeFromSuperview()
         self.loadingAnimation.removeFromSuperview()

@@ -6,9 +6,9 @@
 //  Copyright © 2019 Verse Communications Inc. All rights reserved.
 //
 
+import Analytics
 import Foundation
 import UIKit
-import Analytics
 
 class MenuViewController: UIViewController {
 
@@ -59,7 +59,7 @@ class MenuViewController: UIViewController {
 //        ])
         self.load()
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         CrashReporting.shared.record("Did Show Menu")
@@ -93,7 +93,7 @@ class MenuViewController: UIViewController {
         AppController.shared.pushViewController(for: .about, with: identity)
         self.close()
     }
-    
+
     @objc private func profileButtonTouchUpInside() {
         Analytics.shared.trackDidTapButton(buttonName: "your_profile")
         guard let identity = Bots.current.identity else { return }
@@ -103,7 +103,7 @@ class MenuViewController: UIViewController {
 
     @objc private func settingsButtonTouchUpInside() {
         Analytics.shared.trackDidTapButton(buttonName: "settings")
-        self.close() {
+        self.close {
             AppController.shared.showSettingsViewController()
         }
     }
@@ -118,7 +118,7 @@ class MenuViewController: UIViewController {
             )
             return
         }
-        self.close() {
+        self.close {
             AppController.shared.push(controller)
         }
     }
@@ -133,7 +133,7 @@ class MenuViewController: UIViewController {
             )
             return
         }
-        self.close() {
+        self.close {
             AppController.shared.push(controller)
         }
     }
@@ -145,8 +145,7 @@ class MenuViewController: UIViewController {
         UIView.animate(withDuration: animated ? 0.2 : 0,
                        delay: 0,
                        options: .curveEaseOut,
-                       animations:
-            {
+                       animations: {
                 self.backgroundView.alpha = 1
                 self.menuView.transform = CGAffineTransform.identity
             },
@@ -158,20 +157,18 @@ class MenuViewController: UIViewController {
         UIView.animate(withDuration: animated ? 0.2 : 0,
                        delay: 0,
                        options: .curveEaseIn,
-                       animations:
-            {
+                       animations: {
                 self.backgroundView.alpha = 0
                 self.menuView.transform = CGAffineTransform(translationX: -300, y: 0)
             },
-                       completion:
-            {
-                finished in
+                       completion: {
+                _ in
                 self.dismiss(animated: false) { completion?() }
             })
     }
 }
 
-fileprivate class MenuView: UIView {
+private class MenuView: UIView {
 
     let profileView = ProfileImageView()
 
@@ -209,26 +206,26 @@ fileprivate class MenuView: UIView {
         Layout.fillSouth(of: separator, with: self.profileButton)
         self.profileButton.constrainHeight(to: 50)
         self.profileButton.imageEdgeInsets = .top(-5)
-        
+
         separator = Layout.separatorView(color: UIColor.menuBorderColor)
         Layout.fillSouth(of: self.profileButton, with: separator)
 
         Layout.fillSouth(of: separator, with: self.settingsButton)
         self.settingsButton.constrainHeight(to: 50)
-        
+
         separator = Layout.separatorView(color: UIColor.menuBorderColor)
         Layout.fillSouth(of: self.settingsButton, with: separator)
 
         Layout.fillSouth(of: separator, with: self.helpButton)
         self.helpButton.constrainHeight(to: 50)
         self.helpButton.imageEdgeInsets = .top(2)
-        
+
         separator = Layout.separatorView(color: UIColor.menuBorderColor)
         Layout.fillSouth(of: self.helpButton, with: separator)
 
         Layout.fillSouth(of: separator, with: self.reportBugButton)
         self.reportBugButton.constrainHeight(to: 50)
-        
+
         separator = Layout.separatorView(color: UIColor.menuBorderColor)
         Layout.fillSouth(of: self.reportBugButton, with: separator)
 
@@ -247,7 +244,7 @@ fileprivate class MenuView: UIView {
     }
 }
 
-fileprivate class ProfileImageView: UIView {
+private class ProfileImageView: UIView {
 
     let circleView: UIView = {
         let view = UIView.forAutoLayout()
@@ -283,7 +280,7 @@ fileprivate class ProfileImageView: UIView {
     }
 }
 
-fileprivate class MenuButton: UIButton {
+private class MenuButton: UIButton {
 
     init(title: Text, image: UIImage? = nil) {
 

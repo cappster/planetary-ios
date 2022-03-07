@@ -6,8 +6,8 @@
 //  Copyright © 2020 Verse Communications Inc. All rights reserved.
 //
 
-import Foundation
 import Analytics
+import Foundation
 
 extension AppDelegate {
 

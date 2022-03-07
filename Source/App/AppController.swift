@@ -12,14 +12,14 @@ import UIKit
 class AppController: UIViewController {
 
     static let shared = AppController()
-    
+
     /// Mission Control Center manages missions to stars when launching the app, sending the app
     /// to the background, back to the foreground, and exiting the app
     var missionControlCenter = MissionControlCenter()
-    
+
     /// Queue to handle background operations
     var operationQueue = OperationQueue()
-    
+
     private var didStartDatabaseProcessingObserver: NSObjectProtocol?
     private var didFinishDatabaseProcessingObserver: NSObjectProtocol?
     private var didUpdateDatabaseProgressObserver: NSObjectProtocol?
@@ -33,7 +33,7 @@ class AppController: UIViewController {
         self.view.backgroundColor = .appBackground
         self.addObservers()
     }
-    
+
     deinit {
         removeObservers()
     }
@@ -79,9 +79,9 @@ class AppController: UIViewController {
     }
 
     var mainViewController: MainViewController? {
-        return self.children.first as? MainViewController
+        self.children.first as? MainViewController
     }
-    
+
     // MARK: Directory tab view controller
     // this doesn't seem to work correctly... 
     func showDirectoryViewController(with controller: UIViewController? = nil, animated: Bool = true) {
@@ -91,15 +91,14 @@ class AppController: UIViewController {
     }
 
     var directoryViewController: DirectoryViewController? {
-        return self.children.first as? DirectoryViewController
+        self.children.first as? DirectoryViewController
     }
-    
+
     // MARK: Onboarding view controller
 
     func showOnboardingViewController(_ status: Onboarding.Status = .notStarted,
                                       _ simulate: Bool = false,
-                                      animated: Bool = true)
-    {
+                                      animated: Bool = true) {
         let controller = OnboardingViewController(status: status, simulate: simulate)
         self.setRootViewController(controller, animated: animated)
     }
@@ -120,21 +119,21 @@ class AppController: UIViewController {
         let nc = UINavigationController(rootViewController: SettingsViewController())
         self.mainViewController?.present(nc, animated: true)
     }
-    
+
     // MARK: Observers
-    
+
     func addObservers() {
-        let showProgress = { [weak self] (notification: Notification) -> Void in
-            //self?.showProgress(statusText: notification.databaseProgressStatus)
+        let showProgress = { [weak self] (_: Notification) -> Void in
+            // self?.showProgress(statusText: notification.databaseProgressStatus)
             self?.missionControlCenter.pause()
         }
         let updateProgress = { [weak self] (notification: Notification) -> Void in
             guard let percDone = notification.databaseProgressPercentageDone else { return }
             guard let status = notification.databaseProgressStatus else { return }
-            //self?.updateProgress(perc: percDone, status: status)
+            // self?.updateProgress(perc: percDone, status: status)
         }
-        let dismissProgress = { [weak self] (notification: Notification) -> Void in
-            //self?.hideProgress()
+        let dismissProgress = { [weak self] (_: Notification) -> Void in
+            // self?.hideProgress()
             self?.missionControlCenter.resume()
         }
         removeObservers()
@@ -152,7 +151,7 @@ class AppController: UIViewController {
                                                                        queue: .main,
                                                                        using: updateProgress)
     }
-    
+
     func removeObservers() {
         let notificationCenter = NotificationCenter.default
         if let start = self.didStartDatabaseProcessingObserver {

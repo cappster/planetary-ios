@@ -44,7 +44,7 @@ extension AppDelegate {
 
         // search bar
         UISearchBar.appearance().backgroundColor = .cardBackground
-        
+
         // table footers and headers
         UILabel.appearance(whenContainedInInstancesOf: [UITableViewHeaderFooterView.self]).textColor = UIColor.secondaryText
     }
@@ -61,7 +61,7 @@ extension UITabBar {
             let itemAppearance = UITabBarItemAppearance()
             itemAppearance.normal.iconColor = .unselectedTab
             itemAppearance.selected.iconColor = .selectedTab
-            
+
             let appearance = UITabBarAppearance()
             appearance.stackedLayoutAppearance = itemAppearance
             appearance.configureWithOpaqueBackground()

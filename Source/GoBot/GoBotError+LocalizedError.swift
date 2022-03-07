@@ -9,7 +9,7 @@
 import Foundation
 
 extension GoBotError: LocalizedError {
-    
+
     var errorDescription: String? {
         switch self {
         case .alreadyStarted:
@@ -20,5 +20,4 @@ extension GoBotError: LocalizedError {
             return "Unexpected fault: \(string)"
         }
     }
-    
 }

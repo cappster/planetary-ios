@@ -9,7 +9,7 @@
 import Foundation
 
 extension APIError: LocalizedError {
-    
+
     var errorDescription: String? {
         switch self {
         case .decodeError:
@@ -28,5 +28,4 @@ extension APIError: LocalizedError {
             return error.localizedDescription
         }
     }
-    
 }

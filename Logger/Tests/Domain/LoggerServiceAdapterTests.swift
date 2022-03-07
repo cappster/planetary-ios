@@ -5,8 +5,8 @@
 //  Created by Martin Dutra on 1/12/21.
 //
 
-import XCTest
 @testable import Logger
+import XCTest
 
 final class LoggerServiceAdapterTests: XCTestCase {
 
@@ -55,5 +55,4 @@ final class LoggerServiceAdapterTests: XCTestCase {
     func testFileUrls() {
         XCTAssertEqual(fileLoggerService.fileUrls, loggerService.fileUrls)
     }
-
 }
