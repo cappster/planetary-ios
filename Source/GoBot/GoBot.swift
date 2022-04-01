@@ -1417,6 +1417,7 @@ class GoBot: Bot {
                     completion(error)
                 }
             } catch {
+                let i = 15_000 
                 print(error) // shows error
                 print("Unable to read file")// local message
                 completion(error)
